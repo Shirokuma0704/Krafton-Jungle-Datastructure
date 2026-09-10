@@ -1,0 +1,38 @@
+# ---- C / CMake (CLion) ----
+# 빌드 산출물. 소스만 올리고 만들어진 건 올리지 않는다.
+cmake-build-*/
+compile_commands.json
+*.o
+*.obj
+*.exe
+*.out
+
+# 참고: Makefile 은 일부러 무시하지 않는다.
+# 나중에 직접 작성한 Makefile 을 저장소에 넣어야 할 때 조용히 빠지면 곤란해서다.
+
+# ---- 디버깅 부산물 ----
+core
+core.*
+vgcore.*
+*.dSYM/
+
+# ---- JetBrains (CLion / PyCharm) ----
+# 개인 IDE 설정이라 사람마다 다르다.
+.idea/
+*.iml
+cmake-build-debug/
+cmake-build-release/
+
+# ---- VS Code ----
+.vscode/
+
+# ---- OS 자동 생성 파일 ----
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# ---- 기타 ----
+*.log
+*.bak
+*.swp
