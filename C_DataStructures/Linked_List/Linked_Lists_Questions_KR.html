@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Section A · 연결 리스트 문제</title>
+<style>
+  :root{
+    --bg:#faf9f7; --panel:#ffffff; --ink:#1c1b19; --muted:#6b6862;
+    --line:#e3e0da; --accent:#8a5a2b; --accent-soft:#f3ece3;
+    --term-bg:#f4f2ee; --term-ink:#33312d;
+    --code-bg:#f3f1ec;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#171614; --panel:#1f1e1b; --ink:#eae7e1; --muted:#a09b93;
+      --line:#33312d; --accent:#e0a86a; --accent-soft:#2a2723;
+      --term-bg:#131211; --term-ink:#cfcbc3;
+      --code-bg:#26241f;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+    line-height:1.75; font-size:16px;
+  }
+  .wrap{max-width:860px; margin:0 auto; padding:48px 20px 96px}
+  header.top{border-bottom:2px solid var(--accent); padding-bottom:20px; margin-bottom:8px}
+  header.top .kicker{
+    font-size:.8rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); font-weight:700; margin:0 0 6px;
+  }
+  header.top h1{font-size:1.9rem; margin:0 0 10px; letter-spacing:-.02em}
+  header.top p{margin:0; color:var(--muted); font-size:.95rem}
+  .notice{
+    background:var(--accent-soft); border-left:4px solid var(--accent);
+    padding:14px 18px; border-radius:0 8px 8px 0; margin:28px 0 40px;
+    font-size:.94rem;
+  }
+  .notice strong{color:var(--accent)}
+  nav.toc{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:18px 22px; margin-bottom:48px;
+  }
+  nav.toc h2{font-size:.85rem; letter-spacing:.1em; color:var(--muted);
+    text-transform:uppercase; margin:0 0 10px}
+  nav.toc ol{margin:0; padding-left:1.3em}
+  nav.toc li{margin:3px 0}
+  nav.toc a{color:var(--ink); text-decoration:none; border-bottom:1px dotted var(--line)}
+  nav.toc a:hover{color:var(--accent); border-bottom-color:var(--accent)}
+  section.q{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:28px 30px; margin-bottom:32px;
+  }
+  section.q > h2{
+    margin:0 0 4px; font-size:1.25rem; letter-spacing:-.01em;
+    display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
+  }
+  .num{
+    background:var(--accent); color:#fff; border-radius:8px;
+    font-size:.8rem; padding:2px 9px; font-weight:700; flex:none;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .num{color:#171614}
+  }
+  .fn{font-family:"JetBrains Mono",Consolas,monospace; font-size:1.02rem}
+  h3{font-size:.82rem; letter-spacing:.1em; text-transform:uppercase;
+     color:var(--muted); margin:26px 0 8px; font-weight:700}
+  code{
+    font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;
+    background:var(--code-bg); padding:1px 5px; border-radius:4px; font-size:.9em;
+  }
+  pre{
+    background:var(--term-bg); color:var(--term-ink); border:1px solid var(--line);
+    border-radius:10px; padding:14px 16px; overflow-x:auto;
+    font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;
+    font-size:.86rem; line-height:1.6; margin:0;
+  }
+  pre.proto{background:var(--code-bg); color:var(--ink); font-weight:600}
+  .case{
+    border-left:3px solid var(--line); padding-left:16px; margin:16px 0;
+  }
+  .case p{margin:0 0 8px}
+  .lists{margin:0; padding:0; list-style:none; font-family:Consolas,monospace; font-size:.9rem}
+  .lists li{padding:2px 0}
+  .lists b{color:var(--accent); font-weight:600}
+  .arrow{color:var(--muted); margin:6px 0; font-size:.85rem}
+  footer{margin-top:56px; padding-top:20px; border-top:1px solid var(--line);
+    color:var(--muted); font-size:.85rem; text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="kicker">Section A</p>
+  <h1>연결 리스트 (Linked Lists)</h1>
+  <p>이 섹션에서 지정된 문제 1개를 풀면 됩니다.</p>
+</header>
+
+<div class="notice">
+  <strong>안내</strong> — 각 문제의 프로그램 템플릿은 APAS 시스템에 올라와 있습니다.
+  반드시 그 템플릿을 사용해서 함수를 구현해야 합니다.
+</div>
+
+<nav class="toc">
+  <h2>문제 목록</h2>
+  <ol>
+    <li><a href="#q1">insertSortedLL — 정렬된 리스트에 삽입</a></li>
+    <li><a href="#q2">alternateMergeLL — 번갈아 끼워 합치기</a></li>
+    <li><a href="#q3">moveOddItemsToBackLL — 홀수를 뒤로</a></li>
+    <li><a href="#q4">moveEvenItemsToBackLL — 짝수를 뒤로</a></li>
+    <li><a href="#q5">frontBackSplitLL — 앞/뒤 절반으로 분리</a></li>
+    <li><a href="#q6">moveMaxToFront — 최댓값을 맨 앞으로</a></li>
+    <li><a href="#q7">recursiveReverse — 재귀로 뒤집기</a></li>
+  </ol>
+</nav>
+
+<section class="q" id="q1">
+  <h2><span class="num">1</span><span class="fn">insertSortedLL</span></h2>
+
+  <p>사용자에게 정수 하나를 입력받아, 그 값을 <b>오름차순을 유지하도록</b> 연결 리스트에 삽입하는
+  C 함수 <code>insertSortedLL()</code>을 작성하세요.</p>
+
+  <p>이미 리스트에 존재하는 값이면 삽입하면 안 됩니다. 함수는 새 항목이 들어간
+  <b>인덱스 위치</b>를 반환하고, 정상적으로 끝내지 못한 경우에는 <code>-1</code>을 반환해야 합니다.
+  주어지는 연결 리스트는 이미 정렬되어 있거나 비어 있다고 가정해도 됩니다.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">int insertSortedLL(LinkedList *ll, int item);</pre>
+
+  <h3>예시</h3>
+  <div class="case">
+    <ul class="lists">
+      <li>현재 리스트: <b>2, 3, 5, 7, 9</b></li>
+      <li><code>insertSortedLL()</code>에 8을 넣어 호출</li>
+      <li>결과 리스트: <b>2, 3, 5, 7, 8, 9</b></li>
+    </ul>
+    <p class="arrow">→ 값 8은 인덱스 4에 추가되었으므로 4를 반환합니다.<br>
+    <code>The value 8 was added at index 4</code></p>
+  </div>
+
+  <div class="case">
+    <ul class="lists">
+      <li>현재 리스트: <b>5, 7, 9, 11, 15</b></li>
+      <li><code>insertSortedLL()</code>에 7을 넣어 호출</li>
+      <li>결과 리스트: <b>5, 7, 9, 11, 15</b> (변화 없음)</li>
+    </ul>
+    <p class="arrow">→ 7은 이미 있으므로 삽입에 실패하고 -1을 반환합니다.<br>
+    <code>The value 7 was added at index -1</code></p>
+  </div>
+
+  <h3>입출력 예시</h3>
+<pre>1: Insert an integer to the sorted linked list:
+2: Print the index of the most recent input value:
+3: Print sorted linked list:
+0: Quit:
+
+Please input your choice(1/2/3/0): 1
+Input an integer that you want to add to the linked list: 2
+The resulting linked list is: 2
+
+Please input your choice(1/2/3/0): 1
+Input an integer that you want to add to the linked list: 3
+The resulting linked list is: 2 3
+
+Please input your choice(1/2/3/0): 1
+Input an integer that you want to add to the linked list: 5
+The resulting linked list is: 2 3 5
+
+Please input your choice(1/2/3/0): 1
+Input an integer that you want to add to the linked list: 7
+The resulting linked list is: 2 3 5 7
+
+Please input your choice(1/2/3/0): 1
+Input an integer that you want to add to the linked list: 9
+The resulting linked list is: 2 3 5 7 9
+
+Please input your choice(1/2/3/0): 1
+Input an integer that you want to add to the linked list: 8
+The resulting linked list is: 2 3 5 7 8 9
+
+Please input your choice(1/2/3/0): 2
+The value 8 was added at index 4
+
+Please input your choice(1/2/3/0): 3
+The resulting sorted linked list is: 2 3 5 7 8 9
+
+Please input your choice(1/2/3/0): 1
+Input an integer that you want to add to the linked list: 5
+The resulting linked list is: 2 3 5 7 8 9
+
+Please input your choice(1/2/3/0): 2
+The value 5 was added at index -1
+
+Please input your choice(1/2/3/0): 3
+The resulting sorted linked list is: 2 3 5 7 8 9
+
+Please input your choice(1/2/3/0): 1
+Input an integer that you want to add to the linked list: 11
+The resulting linked list is: 2 3 5 7 8 9 11
+
+Please input your choice(1/2/3/0): 2
+The value 11 was added at index 6
+
+Please input your choice(1/2/3/0): 3
+The resulting sorted linked list is: 2 3 5 7 8 9 11</pre>
+</section>
+
+<section class="q" id="q2">
+  <h2><span class="num">2</span><span class="fn">alternateMergeLL</span></h2>
+
+  <p>두 번째 리스트의 노드들을 첫 번째 리스트의 <b>한 칸 건너 한 칸</b>(alternate position) 자리에
+  끼워 넣는 C 함수 <code>alternateMergeLL()</code>을 작성하세요.</p>
+
+  <p>두 번째 리스트의 노드는 첫 번째 리스트에 끼워 넣을 자리가 남아 있을 때만 삽입됩니다.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void alternateMergeLL(LinkedList *ll1, LinkedList *ll2);</pre>
+
+  <h3>예시</h3>
+  <div class="case">
+    <ul class="lists">
+      <li>LinkedList1: <b>1, 2, 3</b></li>
+      <li>LinkedList2: <b>4, 5, 6, 7</b></li>
+    </ul>
+    <p class="arrow">→ 결과</p>
+    <ul class="lists">
+      <li>LinkedList1: <b>1, 4, 2, 5, 3, 6</b></li>
+      <li>LinkedList2: <b>7</b></li>
+    </ul>
+  </div>
+
+  <p>첫 번째 리스트가 두 번째 리스트보다 길면, 두 번째 리스트는 비게 됩니다.</p>
+
+  <div class="case">
+    <ul class="lists">
+      <li>LinkedList1: <b>1, 5, 7, 3, 9, 11</b></li>
+      <li>LinkedList2: <b>6, 10, 2, 4</b></li>
+    </ul>
+    <p class="arrow">→ 결과</p>
+    <ul class="lists">
+      <li>LinkedList1: <b>1, 6, 5, 10, 7, 2, 3, 4, 9, 11</b></li>
+      <li>LinkedList2: <b>empty</b></li>
+    </ul>
+  </div>
+
+  <h3>입출력 예시</h3>
+  <p style="font-size:.9rem;color:var(--muted);margin:0 0 8px">
+  (현재 리스트가 Linked list 1: 1, 2, 3 / Linked list 2: 4, 5, 6, 7 인 경우)</p>
+<pre>Linked list 1: 1 2 3
+Linked list 2: 4 5 6 7
+
+Please input your choice(1/2/3/0): 3
+The resulting linked lists after merging the given linked list are:
+Linked list 1: 1 4 2 5 3 6
+Linked list 2: 7</pre>
+</section>
+
+<section class="q" id="q3">
+  <h2><span class="num">3</span><span class="fn">moveOddItemsToBackLL</span></h2>
+
+  <p>연결 리스트에서 <b>홀수인 정수를 모두 뒤쪽으로</b> 옮기는 C 함수
+  <code>moveOddItemsToBackLL()</code>을 작성하세요.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void moveOddItemsToBackLL(LinkedList *ll);</pre>
+
+  <h3>입출력 예시</h3>
+  <div class="case">
+    <p>리스트가 <b>2, 3, 4, 7, 15, 18</b> 이면:</p>
+<pre>The resulting Linked List after moving odd integers to the back of the
+Linked List is: 2 4 18 3 7 15</pre>
+  </div>
+  <div class="case">
+    <p>리스트가 <b>2, 7, 18, 3, 4, 15</b> 이면:</p>
+<pre>The resulting Linked List after moving odd integers to the back of the
+Linked List is: 2 18 4 7 3 15</pre>
+  </div>
+  <div class="case">
+    <p>리스트가 <b>1, 3, 5</b> 이면:</p>
+<pre>The resulting Linked List after moving odd integers to the back of the
+Linked List is: 1 3 5</pre>
+  </div>
+  <div class="case">
+    <p>리스트가 <b>2, 4, 6</b> 이면:</p>
+<pre>The resulting Linked List after moving odd integers to the back of the
+Linked List is: 2 4 6</pre>
+  </div>
+</section>
+
+<section class="q" id="q4">
+  <h2><span class="num">4</span><span class="fn">moveEvenItemsToBackLL</span></h2>
+
+  <p>연결 리스트에서 <b>짝수인 정수를 모두 뒤쪽으로</b> 옮기는 C 함수
+  <code>moveEvenItemsToBackLL()</code>을 작성하세요.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void moveEvenItemsToBackLL(LinkedList *ll);</pre>
+
+  <h3>입출력 예시</h3>
+  <div class="case">
+    <p>리스트가 <b>2, 3, 4, 7, 15, 18</b> 이면:</p>
+<pre>The resulting Linked List after moving even integers to the
+back of the Linked List is: 3 7 15 2 4 18</pre>
+  </div>
+  <div class="case">
+    <p>리스트가 <b>2, 7, 18, 3, 4, 15</b> 이면:</p>
+<pre>The resulting Linked List after moving even integers to the
+back of the Linked List is: 7 3 15 2 18 4</pre>
+  </div>
+  <div class="case">
+    <p>리스트가 <b>1, 3, 5</b> 이면:</p>
+<pre>The resulting Linked List after moving even integers to the
+back of the Linked List is: 1 3 5</pre>
+  </div>
+  <div class="case">
+    <p>리스트가 <b>2, 4, 6</b> 이면:</p>
+<pre>The resulting Linked List after moving even integers to the
+back of the Linked List is: 2 4 6</pre>
+  </div>
+</section>
+
+<section class="q" id="q5">
+  <h2><span class="num">5</span><span class="fn">frontBackSplitLL</span></h2>
+
+  <p>단일 연결 리스트를 <b>앞쪽 절반</b>과 <b>뒤쪽 절반</b>, 두 개의 부분 리스트로 나누는 C 함수
+  <code>frontBackSplitLL()</code>을 작성하세요.</p>
+
+  <p>원소 개수가 홀수면, 남는 원소 하나는 <b>앞쪽 리스트</b>에 들어가야 합니다.
+  <code>frontBackSplitLL()</code>은 frontList와 backList 두 리스트를 출력합니다.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void frontBackSplitLL(LinkedList *ll, LinkedList *resultFrontList,
+                      LinkedList *resultBackList);</pre>
+
+  <h3>예시</h3>
+  <div class="case">
+    <ul class="lists">
+      <li>주어진 리스트: <b>2, 3, 5, 6, 7</b></li>
+    </ul>
+    <p class="arrow">→ 결과</p>
+    <ul class="lists">
+      <li>frontList: <b>2, 3, 5</b></li>
+      <li>backList: <b>6, 7</b></li>
+    </ul>
+  </div>
+
+  <h3>입출력 예시</h3>
+<pre>1: Insert an integer to the linked list:
+2: Print the linked list:
+3: Split the linked list into two linked lists, frontList and backList:
+0: Quit:
+
+Please input your choice(1/2/3/0): 1
+Input an integer that you want to add to the linked list: 2
+The resulting linked list is: 2
+
+Please input your choice(1/2/3/0): 1
+Input an integer that you want to add to the linked list: 3
+The resulting linked list is: 2 3
+
+Please input your choice(1/2/3/0): 1
+Input an integer that you want to add to the linked list: 5
+The resulting linked list is: 2 3 5
+
+Please input your choice(1/2/3/0): 1
+Input an integer that you want to add to the linked list: 6
+The resulting linked list is: 2 3 5 6
+
+Please input your choice(1/2/3/0): 1
+Input an integer that you want to add to the linked list: 7
+The resulting linked list is: 2 3 5 6 7
+
+Please input your choice(1/2/3/0): 2
+The resulting linked list is: 2 3 5 6 7
+
+Please input your choice(1/2/3/0): 3
+The resulting linked lists after splitting the given linked list are:
+Front linked list: 2 3 5
+Back linked list: 6 7</pre>
+</section>
+
+<section class="q" id="q6">
+  <h2><span class="num">6</span><span class="fn">moveMaxToFront</span></h2>
+
+  <p>정수 연결 리스트를 <b>최대 한 번만 순회</b>하면서, 저장된 값이 가장 큰 노드를
+  리스트의 맨 앞으로 옮기는 C 함수 <code>moveMaxToFront()</code>를 작성하세요.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">int moveMaxToFront(ListNode **ptrHead);</pre>
+
+  <h3>예시</h3>
+  <div class="case">
+    <p>리스트가 <b>(30, 20, 40, 70, 50)</b> 이면, 결과 리스트는 <b>(70, 30, 20, 40, 50)</b> 입니다.</p>
+  </div>
+
+  <h3>입출력 예시</h3>
+<pre>1: Insert an integer to the linked list:
+2: Move the node with the largest stored value to the front of the list:
+0: Quit:
+
+Please input your choice(1/2/0): 1
+Input an integer that you want to add to the linked list: 30
+The Linked List is: 30
+
+Please input your choice(1/2/0): 1
+Input an integer that you want to add to the linked list: 20
+The Linked List is: 30 20
+
+Please input your choice(1/2/0): 1
+Input an integer that you want to add to the linked list: 40
+The Linked List is: 30 20 40
+
+Please input your choice(1/2/0): 1
+Input an integer that you want to add to the linked list: 70
+The Linked List is: 30 20 40 70
+
+Please input your choice(1/2/0): 1
+Input an integer that you want to add to the linked list: 50
+The Linked List is: 30 20 40 70 50
+
+Please input your choice(1/2/0): 2
+The resulting Linked List is: 70 30 20 40 50
+
+Please input your choice(1/2/0): 0</pre>
+</section>
+
+<section class="q" id="q7">
+  <h2><span class="num">7</span><span class="fn">recursiveReverse</span></h2>
+
+  <p>주어진 연결 리스트를 <b>재귀적으로</b> 뒤집는 C 함수 <code>recursiveReverse()</code>를
+  작성하세요. next 포인터와 head 포인터를 바꾸는 방식으로 뒤집어야 합니다.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void recursiveReverse(ListNode **ptrHead);</pre>
+
+  <h3>예시</h3>
+  <div class="case">
+    <p>리스트가 <b>(1, 2, 3, 4, 5)</b> 이면, 결과 리스트는 <b>(5, 4, 3, 2, 1)</b> 입니다.</p>
+  </div>
+
+  <h3>입출력 예시</h3>
+<pre>1: Insert an integer to the linked list:
+2: Reversed Linked List:
+0: Quit:
+
+Please input your choice(1/2/0): 1
+Input an integer that you want to add to the linked list: 1
+The resulting Linked List is: 1
+
+Please input your choice(1/2/0): 1
+Input an integer that you want to add to the linked list: 2
+The resulting Linked List is: 1 2
+
+Please input your choice(1/2/0): 1
+Input an integer that you want to add to the linked list: 3
+The resulting Linked List is: 1 2 3
+
+Please input your choice(1/2/0): 1
+Input an integer that you want to add to the linked list: 4
+The resulting Linked List is: 1 2 3 4
+
+Please input your choice(1/2/0): 1
+Input an integer that you want to add to the linked list: 5
+The resulting Linked List is: 1 2 3 4 5
+
+Please input your choice(1/2/0): 2
+The resulting Linked List after reversing its elements is: 5 4 3 2 1
+
+Please input your choice(1/2/0): 0</pre>
+</section>
+
+<footer>
+  원본: <code>Linked Lists Questions.pdf</code> · Section A — Linked Lists
+</footer>
+
+</div>
+</body>
+</html>
