@@ -8,6 +8,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -103,7 +105,20 @@ int main()
 
 void alternateMergeLinkedList(LinkedList *ll1, LinkedList *ll2)
 {
-    /* 여기에 코드를 작성하세요 */
+    int size1 = ll1->size;
+	int size2 = ll2->size;
+	int count = MIN(size1, size2);
+
+	for (int index = 0; index < count; index++)
+	{
+		if (ll2->head != NULL)
+		{
+			insertNode(ll1, (index*2)+1, ll2->head->item);
+			removeNode(ll2, 0);
+		}
+	}
+
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
