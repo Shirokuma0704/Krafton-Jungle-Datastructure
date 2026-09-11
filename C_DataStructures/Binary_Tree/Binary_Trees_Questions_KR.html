@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Section E · 이진 트리 문제</title>
+<style>
+  :root{
+    --bg:#faf9f7; --panel:#ffffff; --ink:#1c1b19; --muted:#6b6862;
+    --line:#e3e0da; --accent:#8a5a2b; --accent-soft:#f3ece3;
+    --term-bg:#f4f2ee; --term-ink:#33312d;
+    --code-bg:#f3f1ec; --node:#ffffff; --edge:#8f8a82;
+    --mark:#b4452f; --mark-soft:#fbe9e4; --spoiler:#9a6b4a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#171614; --panel:#1f1e1b; --ink:#eae7e1; --muted:#a09b93;
+      --line:#33312d; --accent:#e0a86a; --accent-soft:#2a2723;
+      --term-bg:#131211; --term-ink:#cfcbc3;
+      --code-bg:#26241f; --node:#26241f; --edge:#6d675f;
+      --mark:#e8836a; --mark-soft:#38241f; --spoiler:#c99a6e;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+    line-height:1.75; font-size:16px;
+  }
+  .wrap{max-width:860px; margin:0 auto; padding:48px 20px 96px}
+  header.top{border-bottom:2px solid var(--accent); padding-bottom:20px; margin-bottom:8px}
+  header.top .kicker{
+    font-size:.8rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); font-weight:700; margin:0 0 6px;
+  }
+  header.top h1{font-size:1.9rem; margin:0 0 10px; letter-spacing:-.02em}
+  header.top p{margin:0; color:var(--muted); font-size:.95rem}
+  .notice{
+    background:var(--accent-soft); border-left:4px solid var(--accent);
+    padding:14px 18px; border-radius:0 8px 8px 0; margin:28px 0 20px;
+    font-size:.94rem;
+  }
+  .notice strong{color:var(--accent)}
+  .notice.spoil{
+    background:transparent; border:1px dashed var(--spoiler); border-radius:10px;
+    margin-bottom:40px;
+  }
+  .notice.spoil strong{color:var(--spoiler)}
+  nav.toc{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:18px 22px; margin-bottom:48px;
+  }
+  nav.toc h2{font-size:.85rem; letter-spacing:.1em; color:var(--muted);
+    text-transform:uppercase; margin:0 0 10px}
+  nav.toc ol{margin:0; padding-left:1.3em}
+  nav.toc li{margin:3px 0}
+  nav.toc a{color:var(--ink); text-decoration:none; border-bottom:1px dotted var(--line)}
+  nav.toc a:hover{color:var(--accent); border-bottom-color:var(--accent)}
+  section.q{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:28px 30px; margin-bottom:32px;
+  }
+  section.q > h2{
+    margin:0 0 4px; font-size:1.25rem; letter-spacing:-.01em;
+    display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
+  }
+  .num{
+    background:var(--accent); color:#fff; border-radius:8px;
+    font-size:.8rem; padding:2px 9px; font-weight:700; flex:none;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .num{color:#171614}
+  }
+  .fn{font-family:"JetBrains Mono",Consolas,monospace; font-size:1.02rem}
+  h3{font-size:.82rem; letter-spacing:.1em; text-transform:uppercase;
+     color:var(--muted); margin:26px 0 8px; font-weight:700}
+  code{
+    font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;
+    background:var(--code-bg); padding:1px 5px; border-radius:4px; font-size:.9em;
+  }
+  pre{
+    background:var(--term-bg); color:var(--term-ink); border:1px solid var(--line);
+    border-radius:10px; padding:14px 16px; overflow-x:auto;
+    font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;
+    font-size:.86rem; line-height:1.6; margin:0;
+  }
+  pre.proto{background:var(--code-bg); color:var(--ink); font-weight:600}
+  .arrow{color:var(--muted); margin:6px 0; font-size:.85rem}
+  .result{
+    background:var(--accent-soft); border-radius:8px; padding:10px 14px;
+    font-family:Consolas,"D2Coding",monospace; font-size:.92rem; margin:10px 0 0;
+  }
+  .result b{color:var(--accent)}
+  figure{margin:18px 0 0; text-align:center}
+  figure svg{max-width:100%; height:auto}
+  figcaption{color:var(--muted); font-size:.82rem; margin-top:6px}
+  .tree .edge{stroke:var(--edge); stroke-width:1.6; fill:none}
+  .tree circle{fill:var(--node); stroke:var(--edge); stroke-width:1.6}
+  .tree text{
+    fill:var(--ink); font-family:"JetBrains Mono",Consolas,monospace;
+    font-size:15px; text-anchor:middle; dominant-baseline:central;
+  }
+  .tree .mark circle{fill:var(--mark-soft); stroke:var(--mark); stroke-width:2.2}
+  .tree .mark text{fill:var(--mark); font-weight:700}
+  .tree .flow{fill:none; stroke:var(--edge); stroke-width:2}
+  .tree .lbl{font-size:13px; fill:var(--muted)}
+  details.hint{
+    margin:22px 0 0; border:1px dashed var(--spoiler); border-radius:10px;
+    padding:10px 16px;
+  }
+  details.hint summary{
+    cursor:pointer; color:var(--spoiler); font-size:.85rem; font-weight:700;
+  }
+  details.hint summary::marker{color:var(--spoiler)}
+  details.hint .body{margin-top:12px; font-size:.9rem}
+  details.hint pre{font-size:.82rem}
+  footer{margin-top:56px; padding-top:20px; border-top:1px solid var(--line);
+    color:var(--muted); font-size:.85rem; text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="kicker">Section E</p>
+  <h1>이진 트리 (Binary Trees)</h1>
+  <p>이 섹션에서 지정된 문제 1개를 풀면 됩니다.</p>
+</header>
+
+<div class="notice">
+  <strong>안내</strong> — 각 문제의 프로그램 템플릿은 APAS 시스템에 올라와 있습니다.
+  반드시 그 템플릿을 사용해서 함수를 구현해야 합니다.
+</div>
+
+<div class="notice spoil">
+  <strong>원본 PDF 여백 메모에 대해</strong> — 원본에는 누군가 빨간 글씨(중국어)로 적어둔 풀이 힌트가
+  문제마다 붙어 있습니다. 빠뜨리면 원본과 달라지니까 옮겨는 뒀는데,
+  <b>먼저 스스로 풀어보시라고 접어두었습니다.</b> 각 문제 아래 “여백 메모 보기”를 눌러야 펼쳐집니다.
+</div>
+
+<nav class="toc">
+  <h2>문제 목록</h2>
+  <ol>
+    <li><a href="#q1">identical — 두 트리가 구조적으로 같은가</a></li>
+    <li><a href="#q2">maxHeight — 최대 높이</a></li>
+    <li><a href="#q3">countOneChildNodes — 자식이 하나뿐인 노드 세기</a></li>
+    <li><a href="#q4">sumOfOddNodes — 홀수 전부 더하기</a></li>
+    <li><a href="#q5">mirrorTree — 좌우로 뒤집기</a></li>
+    <li><a href="#q6">printSmallerValues — 기준보다 작은 값 출력</a></li>
+    <li><a href="#q7">smallestValue — 최솟값</a></li>
+    <li><a href="#q8">hasGreatGrandchild — 증손자가 있는 노드</a></li>
+  </ol>
+</nav>
+
+<section class="q" id="q1">
+  <h2><span class="num">1</span><span class="fn">identical</span></h2>
+
+  <p>두 이진 트리 <code>tree1</code> 과 <code>tree2</code> 가 <b>구조적으로 같은지</b> 판정하는
+  <b>재귀</b> C 함수 <code>identical()</code> 을 작성하세요. 같으면 <code>1</code>, 아니면 <code>0</code> 을 반환합니다.</p>
+
+  <p>두 이진 트리가 구조적으로 같다는 것은, <b>둘 다 비어 있거나</b>, 또는
+  <b>둘 다 비어 있지 않으면서 왼쪽 서브트리와 오른쪽 서브트리가 서로 닮은</b> 경우입니다.
+  (같은 값을 가진 노드들이 같은 모양으로 배치되어 있다는 뜻입니다.)</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">int identical(BTNode *tree1, BTNode *tree2);</pre>
+
+  <h3>예시</h3>
+  <figure>
+    <svg class="tree" viewBox="0 0 720 246" role="img" aria-label="같은 모양의 트리 두 개. 각각 루트 5, 왼쪽 3(자식 1과 2), 오른쪽 7(자식 4와 8)">
+      <path class="edge" d="M160 54 L80 90 M160 54 L240 90 M80 130 L40 166 M80 130 L120 166 M240 130 L200 166 M240 130 L280 166"/>
+      <circle cx="160" cy="34" r="20"/><text x="160" y="34">5</text>
+      <circle cx="80"  cy="110" r="20"/><text x="80"  y="110">3</text>
+      <circle cx="240" cy="110" r="20"/><text x="240" y="110">7</text>
+      <circle cx="40"  cy="186" r="20"/><text x="40"  y="186">1</text>
+      <circle cx="120" cy="186" r="20"/><text x="120" y="186">2</text>
+      <circle cx="200" cy="186" r="20"/><text x="200" y="186">4</text>
+      <circle cx="280" cy="186" r="20"/><text x="280" y="186">8</text>
+
+      <path class="edge" d="M560 54 L480 90 M560 54 L640 90 M480 130 L440 166 M480 130 L520 166 M640 130 L600 166 M640 130 L680 166"/>
+      <circle cx="560" cy="34" r="20"/><text x="560" y="34">5</text>
+      <circle cx="480" cy="110" r="20"/><text x="480" y="110">3</text>
+      <circle cx="640" cy="110" r="20"/><text x="640" y="110">7</text>
+      <circle cx="440" cy="186" r="20"/><text x="440" y="186">1</text>
+      <circle cx="520" cy="186" r="20"/><text x="520" y="186">2</text>
+      <circle cx="600" cy="186" r="20"/><text x="600" y="186">4</text>
+      <circle cx="680" cy="186" r="20"/><text x="680" y="186">8</text>
+
+      <text class="lbl" x="160" y="228">tree1</text>
+      <text class="lbl" x="560" y="228">tree2</text>
+    </svg>
+    <figcaption>Figure 1 — tree1 (왼쪽) 과 tree2 (오른쪽)</figcaption>
+  </figure>
+  <p class="result">tree1 = <b>1 3 2 5 4 7 8</b>, tree2 = <b>1 3 2 5 4 7 8</b> → 구조적으로 <b>같음</b></p>
+
+  <h3>입출력 예시</h3>
+<pre>1: 이진 트리 1 만들기.
+2: 이진 트리 2 만들기.
+3: 두 트리의 구조가 같은지 확인.
+0: 종료;
+
+원하는 번호를 입력하세요(1/2/3/0): 1
+
+트리 1 만드는 중:
+이진 트리에 추가할 정수를 입력하세요. 문자를 넣으면 NULL 로 처리됩니다.
+
+루트에 넣을 정수: 5
+5 의 왼쪽 자식에 넣을 정수: 3
+5 의 오른쪽 자식에 넣을 정수: 7
+3 의 왼쪽 자식에 넣을 정수: 1
+3 의 오른쪽 자식에 넣을 정수: 2
+1 의 왼쪽 자식에 넣을 정수: a
+1 의 오른쪽 자식에 넣을 정수: a
+   ... (이하 같은 방식)
+만들어진 트리 1: 1 3 2 5 4 7 8
+
+원하는 번호를 입력하세요(1/2/3/0): 3
+두 트리는 구조가 같습니다.</pre>
+
+  <details class="hint">
+    <summary>여백 메모 보기 (풀이 힌트 · 스포일러)</summary>
+    <div class="body">
+      <p>둘 다 NULL 이면 <code>return 1</code>.<br>
+      둘 중 하나만 NULL 이면 <code>return 0</code>.<br>
+      아니고 <code>item</code> 이 서로 다르면 <code>return 0</code>.<br>
+      아니면 좌우 서브트리 양쪽을 함께 반환.</p>
+    </div>
+  </details>
+</section>
+
+<section class="q" id="q2">
+  <h2><span class="num">2</span><span class="fn">maxHeight</span></h2>
+
+  <p>이진 트리의 루트 노드 포인터를 받아서, <b>루트에서 가장 먼 리프 노드까지 내려가는 경로의
+  링크 개수</b>를 반환하는 C 함수 <code>maxHeight()</code> 를 작성하세요.</p>
+
+  <p>어떤 노드의 높이는 그 노드에서 가장 깊은 리프 노드까지의 링크 개수입니다.
+  <b>힌트: 빈 트리의 높이는 -1 로 봅니다.</b></p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">int maxHeight(BTNode *root)</pre>
+
+  <h3>예시</h3>
+  <figure>
+    <svg class="tree" viewBox="0 0 560 230" role="img" aria-label="루트 4, 왼쪽 2(자식 1과 3), 오른쪽 6(자식 5와 7)">
+      <path class="edge" d="M280 54 L160 90 M280 54 L400 90 M160 130 L95 166 M160 130 L225 166 M400 130 L335 166 M400 130 L465 166"/>
+      <circle cx="280" cy="34" r="20"/><text x="280" y="34">4</text>
+      <circle cx="160" cy="110" r="20"/><text x="160" y="110">2</text>
+      <circle cx="400" cy="110" r="20"/><text x="400" y="110">6</text>
+      <circle cx="95"  cy="186" r="20"/><text x="95"  y="186">1</text>
+      <circle cx="225" cy="186" r="20"/><text x="225" y="186">3</text>
+      <circle cx="335" cy="186" r="20"/><text x="335" y="186">5</text>
+      <circle cx="465" cy="186" r="20"/><text x="465" y="186">7</text>
+    </svg>
+    <figcaption>Figure 2 — 중위 순회하면 1 2 3 4 5 6 7</figcaption>
+  </figure>
+  <p class="result">최대 높이: <b>2</b>  (예: 4 → 2 → 1 로 링크 2개)</p>
+
+  <details class="hint">
+    <summary>여백 메모 보기 (풀이 힌트 · 스포일러)</summary>
+    <div class="body">
+      <p><code>if null return -1;</code><br>
+      아니면 좌우 서브트리를 비교해서, 큰 쪽에 <code>+1</code> 해서 반환.</p>
+    </div>
+  </details>
+</section>
+
+<section class="q" id="q3">
+  <h2><span class="num">3</span><span class="fn">countOneChildNodes</span></h2>
+
+  <p>이진 트리의 루트 노드 포인터를 받아서, <b>자식이 정확히 하나뿐인 노드의 개수</b>를
+  반환하는 C 함수 <code>countOneChildNodes()</code> 를 작성하세요.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">int countOneChildNodes(BTNode *root)</pre>
+
+  <h3>예시</h3>
+  <figure>
+    <svg class="tree" viewBox="0 0 560 300" role="img" aria-label="루트 50, 왼쪽 20(자식 10과 30), 30의 왼쪽 자식 55, 오른쪽 60(오른쪽 자식 80만)">
+      <path class="edge" d="M280 54 L160 90 M280 54 L400 90 M160 130 L95 166 M160 130 L225 166 M400 130 L465 166 M225 206 L190 242"/>
+      <circle cx="280" cy="34" r="20"/><text x="280" y="34">50</text>
+      <circle cx="160" cy="110" r="20"/><text x="160" y="110">20</text>
+      <g class="mark"><circle cx="400" cy="110" r="20"/><text x="400" y="110">60</text></g>
+      <circle cx="95"  cy="186" r="20"/><text x="95"  y="186">10</text>
+      <g class="mark"><circle cx="225" cy="186" r="20"/><text x="225" y="186">30</text></g>
+      <circle cx="465" cy="186" r="20"/><text x="465" y="186">80</text>
+      <circle cx="190" cy="262" r="20"/><text x="190" y="262">55</text>
+    </svg>
+    <figcaption>Figure 3 — 자식이 하나뿐인 노드를 빨갛게 칠했습니다</figcaption>
+  </figure>
+  <p class="result">자식이 정확히 하나인 노드 개수: <b>2</b>  (30 은 왼쪽만, 60 은 오른쪽만)</p>
+
+  <details class="hint">
+    <summary>여백 메모 보기 (풀이 힌트 · 스포일러)</summary>
+    <div class="body">
+      <p><code>if null return 0;</code><br>
+      아니고 자식이 하나만 있으면 <code>return 좌 + 우 + 1</code>.<br>
+      아니면 <code>return 좌 + 우</code>.</p>
+    </div>
+  </details>
+</section>
+
+<section class="q" id="q4">
+  <h2><span class="num">4</span><span class="fn">sumOfOddNodes</span></h2>
+
+  <p>정수 이진 트리의 루트 노드 포인터를 받아서, <b>트리에 있는 홀수를 전부 더한 값</b>을
+  반환하는 <b>재귀</b> C 함수 <code>sumOfOddNodes()</code> 를 작성하세요.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">int sumOfOddNodes(BTNode *root);</pre>
+
+  <h3>예시</h3>
+  <figure>
+    <svg class="tree" viewBox="0 0 560 230" role="img" aria-label="루트 50, 왼쪽 40(자식 11과 35), 오른쪽 60(자식 80과 85)">
+      <path class="edge" d="M280 54 L160 90 M280 54 L400 90 M160 130 L95 166 M160 130 L225 166 M400 130 L335 166 M400 130 L465 166"/>
+      <circle cx="280" cy="34" r="20"/><text x="280" y="34">50</text>
+      <circle cx="160" cy="110" r="20"/><text x="160" y="110">40</text>
+      <circle cx="400" cy="110" r="20"/><text x="400" y="110">60</text>
+      <g class="mark"><circle cx="95" cy="186" r="20"/><text x="95" y="186">11</text></g>
+      <g class="mark"><circle cx="225" cy="186" r="20"/><text x="225" y="186">35</text></g>
+      <circle cx="335" cy="186" r="20"/><text x="335" y="186">80</text>
+      <g class="mark"><circle cx="465" cy="186" r="20"/><text x="465" y="186">85</text></g>
+    </svg>
+    <figcaption>Figure 4 — 홀수를 빨갛게 칠했습니다</figcaption>
+  </figure>
+  <p class="result">홀수 총합: <b>131</b>  (11 + 35 + 85)</p>
+
+  <details class="hint">
+    <summary>여백 메모 보기 (풀이 힌트 · 스포일러)</summary>
+    <div class="body">
+      <p><code>if null return 0;</code><br>
+      아니고 <code>item</code> 이 홀수면 <code>return 좌 + 우 + item</code>.<br>
+      아니면 <code>return 좌 + 우</code>.</p>
+    </div>
+  </details>
+</section>
+
+<section class="q" id="q5">
+  <h2><span class="num">5</span><span class="fn">mirrorTree</span></h2>
+
+  <p>이진 트리를 <b>원래 구조의 거울상</b>으로 바꾸는 <b>재귀</b> C 함수
+  <code>mirrorTree()</code> 를 작성하세요.</p>
+
+  <p><b>중간 트리나 임시 트리를 새로 만들면 안 됩니다.</b>
+  함수는 뒤집을 이진 트리의 루트 노드 포인터 하나만 받습니다.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void mirrorTree(BTNode *node);</pre>
+
+  <h3>예시</h3>
+  <figure>
+    <svg class="tree" viewBox="0 0 720 246" role="img" aria-label="왼쪽 트리를 좌우로 뒤집으면 오른쪽 트리가 된다">
+      <path class="edge" d="M160 54 L80 90 M160 54 L240 90 M80 130 L120 166 M240 130 L200 166 M240 130 L280 166"/>
+      <circle cx="160" cy="34" r="20"/><text x="160" y="34">4</text>
+      <circle cx="80"  cy="110" r="20"/><text x="80"  y="110">5</text>
+      <circle cx="240" cy="110" r="20"/><text x="240" y="110">2</text>
+      <circle cx="120" cy="186" r="20"/><text x="120" y="186">6</text>
+      <circle cx="200" cy="186" r="20"/><text x="200" y="186">3</text>
+      <circle cx="280" cy="186" r="20"/><text x="280" y="186">1</text>
+
+      <path class="flow" d="M330 110 L390 110 M375 100 L390 110 L375 120"/>
+
+      <path class="edge" d="M560 54 L480 90 M560 54 L640 90 M480 130 L440 166 M480 130 L520 166 M640 130 L600 166"/>
+      <circle cx="560" cy="34" r="20"/><text x="560" y="34">4</text>
+      <circle cx="480" cy="110" r="20"/><text x="480" y="110">2</text>
+      <circle cx="640" cy="110" r="20"/><text x="640" y="110">5</text>
+      <circle cx="440" cy="186" r="20"/><text x="440" y="186">1</text>
+      <circle cx="520" cy="186" r="20"/><text x="520" y="186">3</text>
+      <circle cx="600" cy="186" r="20"/><text x="600" y="186">6</text>
+
+      <text class="lbl" x="160" y="228">tree1</text>
+      <text class="lbl" x="560" y="228">tree2</text>
+    </svg>
+    <figcaption>Figure 5 — tree1 (왼쪽) 과 거울상 tree2 (오른쪽)</figcaption>
+  </figure>
+  <p class="result">tree1 = <b>5 6 4 3 2 1</b> → tree2 = <b>1 2 3 4 6 5</b></p>
+  <p class="arrow">→ 중위 순회 결과가 정확히 뒤집힙니다.</p>
+
+  <details class="hint">
+    <summary>여백 메모 보기 (풀이 힌트 · 스포일러)</summary>
+    <div class="body">
+<pre>if (node == NULL) return;
+else BTNode *temp;
+     // temp 로 좌우 서브트리를 맞바꾼다
+     mirrorTree(node-&gt;left);
+     mirrorTree(node-&gt;right);</pre>
+    </div>
+  </details>
+</section>
+
+<section class="q" id="q6">
+  <h2><span class="num">6</span><span class="fn">printSmallerValues</span></h2>
+
+  <p>이진 트리의 루트 노드 포인터를 받아서, <b>주어진 값 <code>m</code> 보다 작은 값</b>을
+  전부 출력하는 C 함수 <code>printSmallerValues()</code> 를 작성하세요.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void printSmallerValues(BTNode *node, int m);</pre>
+
+  <h3>예시</h3>
+  <figure>
+    <svg class="tree" viewBox="0 0 560 230" role="img" aria-label="루트 50, 왼쪽 30(자식 25와 65), 오른쪽 60(자식 10과 75)">
+      <path class="edge" d="M280 54 L160 90 M280 54 L400 90 M160 130 L95 166 M160 130 L225 166 M400 130 L335 166 M400 130 L465 166"/>
+      <g class="mark"><circle cx="280" cy="34" r="20"/><text x="280" y="34">50</text></g>
+      <g class="mark"><circle cx="160" cy="110" r="20"/><text x="160" y="110">30</text></g>
+      <circle cx="400" cy="110" r="20"/><text x="400" y="110">60</text>
+      <g class="mark"><circle cx="95" cy="186" r="20"/><text x="95" y="186">25</text></g>
+      <circle cx="225" cy="186" r="20"/><text x="225" y="186">65</text>
+      <g class="mark"><circle cx="335" cy="186" r="20"/><text x="335" y="186">10</text></g>
+      <circle cx="465" cy="186" r="20"/><text x="465" y="186">75</text>
+    </svg>
+    <figcaption>Figure 6 — 55 보다 작은 노드를 빨갛게 칠했습니다</figcaption>
+  </figure>
+  <p class="result"><code>value = 55</code> 로 호출 → <b>50, 30, 25, 10</b> 출력</p>
+  <p class="arrow">→ 이 트리는 이진 <b>탐색</b> 트리가 아닙니다. 그냥 이진 트리예요.</p>
+
+  <details class="hint">
+    <summary>여백 메모 보기 (풀이 힌트 · 스포일러)</summary>
+    <div class="body">
+      <p>이 문제에서 쓰는 건 <b>전위 순회(preorder)</b> 출력이다.</p>
+    </div>
+  </details>
+</section>
+
+<section class="q" id="q7">
+  <h2><span class="num">7</span><span class="fn">smallestValue</span></h2>
+
+  <p>주어진 트리에 저장된 <b>가장 작은 값</b>을 반환하는 C 함수
+  <code>smallestValue()</code> 를 작성하세요. 함수는 트리의 루트 포인터를 받습니다.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">int smallestValue(BTNode *node);</pre>
+
+  <h3>예시</h3>
+  <figure>
+    <svg class="tree" viewBox="0 0 560 230" role="img" aria-label="루트 50, 왼쪽 30(자식 25와 65), 오른쪽 60(자식 10과 75). 최솟값은 10">
+      <path class="edge" d="M280 54 L160 90 M280 54 L400 90 M160 130 L95 166 M160 130 L225 166 M400 130 L335 166 M400 130 L465 166"/>
+      <circle cx="280" cy="34" r="20"/><text x="280" y="34">50</text>
+      <circle cx="160" cy="110" r="20"/><text x="160" y="110">30</text>
+      <circle cx="400" cy="110" r="20"/><text x="400" y="110">60</text>
+      <circle cx="95"  cy="186" r="20"/><text x="95"  y="186">25</text>
+      <circle cx="225" cy="186" r="20"/><text x="225" y="186">65</text>
+      <g class="mark"><circle cx="335" cy="186" r="20"/><text x="335" y="186">10</text></g>
+      <circle cx="465" cy="186" r="20"/><text x="465" y="186">75</text>
+    </svg>
+    <figcaption>Figure 7 — 최솟값을 빨갛게 칠했습니다</figcaption>
+  </figure>
+  <p class="result">최솟값: <b>10</b></p>
+  <p class="arrow">→ 탐색 트리가 아니라서 “왼쪽 끝까지 내려가면 최솟값” 이 성립하지 않습니다.</p>
+</section>
+
+<section class="q" id="q8">
+  <h2><span class="num">8</span><span class="fn">hasGreatGrandchild</span></h2>
+
+  <p>이진 트리에서 <b>증손자(great-grandchild)가 하나 이상 있는</b> 노드의 값을 전부 출력하는
+  <b>재귀</b> C 함수 <code>hasGreatGrandchild()</code> 를 작성하세요.
+  함수는 루트 노드 포인터 하나만 받습니다.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">int hasGreatGrandchild(BTNode *node);</pre>
+
+  <h3>예시</h3>
+  <figure>
+    <svg class="tree" viewBox="0 0 560 300" role="img" aria-label="루트 50, 왼쪽 30(자식 25와 65), 65의 왼쪽 자식 20, 오른쪽 60(자식 10과 75), 75의 오른쪽 자식 15">
+      <path class="edge" d="M280 54 L160 90 M280 54 L400 90 M160 130 L95 166 M160 130 L225 166 M400 130 L335 166 M400 130 L465 166 M225 206 L190 242 M465 206 L500 242"/>
+      <g class="mark"><circle cx="280" cy="34" r="20"/><text x="280" y="34">50</text></g>
+      <circle cx="160" cy="110" r="20"/><text x="160" y="110">30</text>
+      <circle cx="400" cy="110" r="20"/><text x="400" y="110">60</text>
+      <circle cx="95"  cy="186" r="20"/><text x="95"  y="186">25</text>
+      <circle cx="225" cy="186" r="20"/><text x="225" y="186">65</text>
+      <circle cx="335" cy="186" r="20"/><text x="335" y="186">10</text>
+      <circle cx="465" cy="186" r="20"/><text x="465" y="186">75</text>
+      <circle cx="190" cy="262" r="20"/><text x="190" y="262">20</text>
+      <circle cx="500" cy="262" r="20"/><text x="500" y="262">15</text>
+    </svg>
+    <figcaption>Figure 8 — 증손자를 가진 노드를 빨갛게 칠했습니다</figcaption>
+  </figure>
+  <p class="result">출력: <b>50</b>  (50 → 30 → 65 → 20 으로 3대 아래에 증손자가 있음)</p>
+  <p class="arrow">→ 30 은 손자(20)까지만 있고 증손자는 없습니다.</p>
+
+  <details class="hint">
+    <summary>여백 메모 보기 (풀이 힌트 · 스포일러)</summary>
+    <div class="body">
+      <p>이 함수가 반환하는 건 현재 <code>node</code> 의 <b>depth</b> 다.<br>
+      현재 <code>node</code> 의 depth 가 3 이상이면 그 <code>node</code> 의 <code>item</code> 을 출력한다.<br>
+      반환하는 정수는 depth 다.</p>
+    </div>
+  </details>
+</section>
+
+<footer>
+  원본: <i>Binary Trees Questions.pdf</i> (CE1007/CZ1007 Data Structures, Section E) 를 한글로 옮긴 문서입니다.<br>
+  트리 그림은 원본 PDF 의 도형을 다시 그린 것입니다. 원본 대조가 필요하면 같은 폴더의 PDF 를 보세요.
+</footer>
+
+</div>
+</body>
+</html>

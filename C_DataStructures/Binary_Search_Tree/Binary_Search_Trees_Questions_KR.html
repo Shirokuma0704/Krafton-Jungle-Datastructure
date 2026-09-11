@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Section F · 이진 탐색 트리 문제</title>
+<style>
+  :root{
+    --bg:#faf9f7; --panel:#ffffff; --ink:#1c1b19; --muted:#6b6862;
+    --line:#e3e0da; --accent:#8a5a2b; --accent-soft:#f3ece3;
+    --term-bg:#f4f2ee; --term-ink:#33312d;
+    --code-bg:#f3f1ec; --node:#ffffff; --edge:#8f8a82;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#171614; --panel:#1f1e1b; --ink:#eae7e1; --muted:#a09b93;
+      --line:#33312d; --accent:#e0a86a; --accent-soft:#2a2723;
+      --term-bg:#131211; --term-ink:#cfcbc3;
+      --code-bg:#26241f; --node:#26241f; --edge:#6d675f;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+    line-height:1.75; font-size:16px;
+  }
+  .wrap{max-width:860px; margin:0 auto; padding:48px 20px 96px}
+  header.top{border-bottom:2px solid var(--accent); padding-bottom:20px; margin-bottom:8px}
+  header.top .kicker{
+    font-size:.8rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); font-weight:700; margin:0 0 6px;
+  }
+  header.top h1{font-size:1.9rem; margin:0 0 10px; letter-spacing:-.02em}
+  header.top p{margin:0; color:var(--muted); font-size:.95rem}
+  .notice{
+    background:var(--accent-soft); border-left:4px solid var(--accent);
+    padding:14px 18px; border-radius:0 8px 8px 0; margin:28px 0 40px;
+    font-size:.94rem;
+  }
+  .notice strong{color:var(--accent)}
+  nav.toc{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:18px 22px; margin-bottom:48px;
+  }
+  nav.toc h2{font-size:.85rem; letter-spacing:.1em; color:var(--muted);
+    text-transform:uppercase; margin:0 0 10px}
+  nav.toc ol{margin:0; padding-left:1.3em}
+  nav.toc li{margin:3px 0}
+  nav.toc a{color:var(--ink); text-decoration:none; border-bottom:1px dotted var(--line)}
+  nav.toc a:hover{color:var(--accent); border-bottom-color:var(--accent)}
+  section.q{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:28px 30px; margin-bottom:32px;
+  }
+  section.q > h2{
+    margin:0 0 4px; font-size:1.25rem; letter-spacing:-.01em;
+    display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
+  }
+  .num{
+    background:var(--accent); color:#fff; border-radius:8px;
+    font-size:.8rem; padding:2px 9px; font-weight:700; flex:none;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .num{color:#171614}
+  }
+  .fn{font-family:"JetBrains Mono",Consolas,monospace; font-size:1.02rem}
+  h3{font-size:.82rem; letter-spacing:.1em; text-transform:uppercase;
+     color:var(--muted); margin:26px 0 8px; font-weight:700}
+  code{
+    font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;
+    background:var(--code-bg); padding:1px 5px; border-radius:4px; font-size:.9em;
+  }
+  pre{
+    background:var(--term-bg); color:var(--term-ink); border:1px solid var(--line);
+    border-radius:10px; padding:14px 16px; overflow-x:auto;
+    font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;
+    font-size:.86rem; line-height:1.6; margin:0;
+  }
+  pre.proto{background:var(--code-bg); color:var(--ink); font-weight:600}
+  .arrow{color:var(--muted); margin:6px 0; font-size:.85rem}
+  .result{
+    background:var(--accent-soft); border-radius:8px; padding:10px 14px;
+    font-family:Consolas,"D2Coding",monospace; font-size:.92rem; margin:10px 0 0;
+  }
+  .result b{color:var(--accent)}
+  figure{margin:18px 0 0; text-align:center}
+  figure svg{max-width:100%; height:auto}
+  figcaption{color:var(--muted); font-size:.82rem; margin-top:6px}
+  .tree .edge{stroke:var(--edge); stroke-width:1.6; fill:none}
+  .tree circle{fill:var(--node); stroke:var(--edge); stroke-width:1.6}
+  .tree text{
+    fill:var(--ink); font-family:"JetBrains Mono",Consolas,monospace;
+    font-size:15px; text-anchor:middle; dominant-baseline:central;
+  }
+  footer{margin-top:56px; padding-top:20px; border-top:1px solid var(--line);
+    color:var(--muted); font-size:.85rem; text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="kicker">Section F</p>
+  <h1>이진 탐색 트리 (Binary Search Trees)</h1>
+  <p>이 섹션에서 지정된 문제 1개를 풀면 됩니다.</p>
+</header>
+
+<div class="notice">
+  <strong>안내</strong> — 각 문제의 프로그램 템플릿은 APAS 시스템에 올라와 있습니다.
+  반드시 그 템플릿을 사용해서 함수를 구현해야 합니다.
+</div>
+
+<nav class="toc">
+  <h2>문제 목록</h2>
+  <ol>
+    <li><a href="#q1">levelOrderTraversal — 큐로 레벨 순회</a></li>
+    <li><a href="#q2">inOrderIterative — 스택으로 중위 순회</a></li>
+    <li><a href="#q3">preOrderIterative — 스택으로 전위 순회</a></li>
+    <li><a href="#q4">postOrderIterativeS1 — 스택 하나로 후위 순회</a></li>
+    <li><a href="#q5">postOrderIterativeS2 — 스택 둘로 후위 순회</a></li>
+  </ol>
+</nav>
+
+<section class="q" id="q1">
+  <h2><span class="num">1</span><span class="fn">levelOrderTraversal</span></h2>
+
+  <p><b>큐를 사용해서</b> 이진 트리를 루트 레벨부터 한 층씩 훑어 출력하는
+  <b>반복문</b> C 함수 <code>levelOrderTraversal</code> 을 작성하세요.</p>
+
+  <p>큐에 정수를 넣고 뺄 때는 <code>enqueue()</code> 와 <code>dequeue()</code> 만 사용해야 합니다.
+  <b>시작할 때 큐가 비어 있지 않으면 먼저 비워야 합니다.</b></p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void levelOrderIterative(BSTNode *root);</pre>
+
+  <h3>예시</h3>
+  <figure>
+    <svg class="tree" viewBox="0 0 560 230" role="img" aria-label="루트 20, 왼쪽 15(자식 10과 18), 오른쪽 50(자식 25와 80)">
+      <path class="edge" d="M280 54 L160 90 M280 54 L400 90 M160 130 L95 166 M160 130 L225 166 M400 130 L335 166 M400 130 L465 166"/>
+      <circle cx="280" cy="34" r="20"/><text x="280" y="34">20</text>
+      <circle cx="160" cy="110" r="20"/><text x="160" y="110">15</text>
+      <circle cx="400" cy="110" r="20"/><text x="400" y="110">50</text>
+      <circle cx="95"  cy="186" r="20"/><text x="95"  y="186">10</text>
+      <circle cx="225" cy="186" r="20"/><text x="225" y="186">18</text>
+      <circle cx="335" cy="186" r="20"/><text x="335" y="186">25</text>
+      <circle cx="465" cy="186" r="20"/><text x="465" y="186">80</text>
+    </svg>
+    <figcaption>Figure 1</figcaption>
+  </figure>
+  <p class="result">레벨 순회 결과: <b>20, 15, 50, 10, 18, 25, 80</b></p>
+</section>
+
+<section class="q" id="q2">
+  <h2><span class="num">2</span><span class="fn">inOrderIterative</span></h2>
+
+  <p><b>스택을 사용해서</b> 이진 탐색 트리의 중위 순회(in-order)를 출력하는
+  <b>반복문</b> C 함수 <code>inOrderIterative()</code> 를 작성하세요.</p>
+
+  <p>스택에 정수를 넣고 뺄 때는 <code>push()</code> 와 <code>pop()</code> 만 사용해야 합니다.
+  <b>시작할 때 스택이 비어 있지 않으면 먼저 비워야 합니다.</b></p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void inOrderIterative(BSTNode *root);</pre>
+
+  <h3>예시</h3>
+  <figure>
+    <svg class="tree" viewBox="0 0 560 230" role="img" aria-label="루트 20, 왼쪽 15(자식 10과 18), 오른쪽 50(자식 없음)">
+      <path class="edge" d="M280 54 L160 90 M280 54 L400 90 M160 130 L95 166 M160 130 L225 166"/>
+      <circle cx="280" cy="34" r="20"/><text x="280" y="34">20</text>
+      <circle cx="160" cy="110" r="20"/><text x="160" y="110">15</text>
+      <circle cx="400" cy="110" r="20"/><text x="400" y="110">50</text>
+      <circle cx="95"  cy="186" r="20"/><text x="95"  y="186">10</text>
+      <circle cx="225" cy="186" r="20"/><text x="225" y="186">18</text>
+    </svg>
+    <figcaption>Figure 2 — 50 에는 자식이 없습니다</figcaption>
+  </figure>
+  <p class="result">중위 순회 결과: <b>10, 15, 18, 20, 50</b></p>
+</section>
+
+<section class="q" id="q3">
+  <h2><span class="num">3</span><span class="fn">preOrderIterative</span></h2>
+
+  <p><b>스택을 사용해서</b> 이진 탐색 트리의 전위 순회(pre-order)를 출력하는
+  <b>반복문</b> C 함수 <code>preOrderIterative()</code> 를 작성하세요.</p>
+
+  <p>스택에 정수를 넣고 뺄 때는 <code>push()</code> 와 <code>pop()</code> 만 사용해야 합니다.
+  <b>시작할 때 스택이 비어 있지 않으면 먼저 비워야 합니다.</b></p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void preOrderIterative(BSTNode *root);</pre>
+
+  <h3>예시</h3>
+  <figure>
+    <svg class="tree" viewBox="0 0 560 230" role="img" aria-label="루트 20, 왼쪽 15(자식 10과 18), 오른쪽 50(자식 25와 80)">
+      <path class="edge" d="M280 54 L160 90 M280 54 L400 90 M160 130 L95 166 M160 130 L225 166 M400 130 L335 166 M400 130 L465 166"/>
+      <circle cx="280" cy="34" r="20"/><text x="280" y="34">20</text>
+      <circle cx="160" cy="110" r="20"/><text x="160" y="110">15</text>
+      <circle cx="400" cy="110" r="20"/><text x="400" y="110">50</text>
+      <circle cx="95"  cy="186" r="20"/><text x="95"  y="186">10</text>
+      <circle cx="225" cy="186" r="20"/><text x="225" y="186">18</text>
+      <circle cx="335" cy="186" r="20"/><text x="335" y="186">25</text>
+      <circle cx="465" cy="186" r="20"/><text x="465" y="186">80</text>
+    </svg>
+    <figcaption>Figure 3</figcaption>
+  </figure>
+  <p class="result">전위 순회 결과: <b>20, 15, 10, 18, 50, 25, 80</b></p>
+</section>
+
+<section class="q" id="q4">
+  <h2><span class="num">4</span><span class="fn">postOrderIterativeS1</span></h2>
+
+  <p><b>스택 하나를 사용해서</b> 이진 탐색 트리의 후위 순회(post-order)를 출력하는
+  <b>반복문</b> C 함수 <code>postOrderIterativeS1()</code> 을 작성하세요.</p>
+
+  <p>스택에 정수를 넣고 뺄 때는 <code>push()</code> 와 <code>pop()</code> 만 사용해야 합니다.
+  <b>시작할 때 스택이 비어 있지 않으면 먼저 비워야 합니다.</b></p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void postOrderIterativeS1(BSTNode *node);</pre>
+
+  <h3>예시</h3>
+  <figure>
+    <svg class="tree" viewBox="0 0 560 230" role="img" aria-label="루트 20, 왼쪽 15(자식 10과 18), 오른쪽 50(자식 25와 80)">
+      <path class="edge" d="M280 54 L160 90 M280 54 L400 90 M160 130 L95 166 M160 130 L225 166 M400 130 L335 166 M400 130 L465 166"/>
+      <circle cx="280" cy="34" r="20"/><text x="280" y="34">20</text>
+      <circle cx="160" cy="110" r="20"/><text x="160" y="110">15</text>
+      <circle cx="400" cy="110" r="20"/><text x="400" y="110">50</text>
+      <circle cx="95"  cy="186" r="20"/><text x="95"  y="186">10</text>
+      <circle cx="225" cy="186" r="20"/><text x="225" y="186">18</text>
+      <circle cx="335" cy="186" r="20"/><text x="335" y="186">25</text>
+      <circle cx="465" cy="186" r="20"/><text x="465" y="186">80</text>
+    </svg>
+    <figcaption>Figure 4</figcaption>
+  </figure>
+  <p class="result">후위 순회 결과: <b>10, 18, 15, 25, 80, 50, 20</b></p>
+</section>
+
+<section class="q" id="q5">
+  <h2><span class="num">5</span><span class="fn">postOrderIterativeS2</span></h2>
+
+  <p><b>스택 두 개를 사용해서</b> 이진 탐색 트리의 후위 순회(post-order)를 출력하는
+  <b>반복문</b> C 함수 <code>postOrderIterativeS2()</code> 를 작성하세요.</p>
+
+  <p>스택에 정수를 넣고 뺄 때는 <code>push()</code> 와 <code>pop()</code> 만 사용해야 합니다.
+  <b>시작할 때 스택들이 비어 있지 않으면 먼저 비워야 합니다.</b></p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void postOrderIterativeS2(BSTNode *root);</pre>
+
+  <h3>예시</h3>
+  <figure>
+    <svg class="tree" viewBox="0 0 560 230" role="img" aria-label="루트 20, 왼쪽 15(자식 10과 18), 오른쪽 50(자식 25와 80)">
+      <path class="edge" d="M280 54 L160 90 M280 54 L400 90 M160 130 L95 166 M160 130 L225 166 M400 130 L335 166 M400 130 L465 166"/>
+      <circle cx="280" cy="34" r="20"/><text x="280" y="34">20</text>
+      <circle cx="160" cy="110" r="20"/><text x="160" y="110">15</text>
+      <circle cx="400" cy="110" r="20"/><text x="400" y="110">50</text>
+      <circle cx="95"  cy="186" r="20"/><text x="95"  y="186">10</text>
+      <circle cx="225" cy="186" r="20"/><text x="225" y="186">18</text>
+      <circle cx="335" cy="186" r="20"/><text x="335" y="186">25</text>
+      <circle cx="465" cy="186" r="20"/><text x="465" y="186">80</text>
+    </svg>
+    <figcaption>Figure 5</figcaption>
+  </figure>
+  <p class="result">후위 순회 결과: <b>10, 18, 15, 25, 80, 50, 20</b></p>
+  <p class="arrow">→ 4번과 결과는 같습니다. 스택을 몇 개 쓰느냐만 다릅니다.</p>
+</section>
+
+<footer>
+  원본: <i>Binary Search Trees Questions.pdf</i> (CE1007/CZ1007 Data Structures, Section F) 를 한글로 옮긴 문서입니다.<br>
+  원본 대조가 필요하면 같은 폴더의 PDF 를 보세요.
+</footer>
+
+</div>
+</body>
+</html>

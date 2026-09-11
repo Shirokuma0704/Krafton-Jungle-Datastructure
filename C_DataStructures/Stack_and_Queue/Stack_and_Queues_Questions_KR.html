@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Section C · 스택과 큐 문제</title>
+<style>
+  :root{
+    --bg:#faf9f7; --panel:#ffffff; --ink:#1c1b19; --muted:#6b6862;
+    --line:#e3e0da; --accent:#8a5a2b; --accent-soft:#f3ece3;
+    --term-bg:#f4f2ee; --term-ink:#33312d;
+    --code-bg:#f3f1ec; --spoiler:#9a6b4a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#171614; --panel:#1f1e1b; --ink:#eae7e1; --muted:#a09b93;
+      --line:#33312d; --accent:#e0a86a; --accent-soft:#2a2723;
+      --term-bg:#131211; --term-ink:#cfcbc3;
+      --code-bg:#26241f; --spoiler:#c99a6e;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+    line-height:1.75; font-size:16px;
+  }
+  .wrap{max-width:860px; margin:0 auto; padding:48px 20px 96px}
+  header.top{border-bottom:2px solid var(--accent); padding-bottom:20px; margin-bottom:8px}
+  header.top .kicker{
+    font-size:.8rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); font-weight:700; margin:0 0 6px;
+  }
+  header.top h1{font-size:1.9rem; margin:0 0 10px; letter-spacing:-.02em}
+  header.top p{margin:0; color:var(--muted); font-size:.95rem}
+  .notice{
+    background:var(--accent-soft); border-left:4px solid var(--accent);
+    padding:14px 18px; border-radius:0 8px 8px 0; margin:28px 0 40px;
+    font-size:.94rem;
+  }
+  .notice strong{color:var(--accent)}
+  nav.toc{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:18px 22px; margin-bottom:48px;
+  }
+  nav.toc h2{font-size:.85rem; letter-spacing:.1em; color:var(--muted);
+    text-transform:uppercase; margin:0 0 10px}
+  nav.toc ol{margin:0; padding-left:1.3em}
+  nav.toc li{margin:3px 0}
+  nav.toc a{color:var(--ink); text-decoration:none; border-bottom:1px dotted var(--line)}
+  nav.toc a:hover{color:var(--accent); border-bottom-color:var(--accent)}
+  section.q{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:28px 30px; margin-bottom:32px;
+  }
+  section.q > h2{
+    margin:0 0 4px; font-size:1.25rem; letter-spacing:-.01em;
+    display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
+  }
+  .num{
+    background:var(--accent); color:#fff; border-radius:8px;
+    font-size:.8rem; padding:2px 9px; font-weight:700; flex:none;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .num{color:#171614}
+  }
+  .fn{font-family:"JetBrains Mono",Consolas,monospace; font-size:1.02rem}
+  h3{font-size:.82rem; letter-spacing:.1em; text-transform:uppercase;
+     color:var(--muted); margin:26px 0 8px; font-weight:700}
+  code{
+    font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;
+    background:var(--code-bg); padding:1px 5px; border-radius:4px; font-size:.9em;
+  }
+  pre{
+    background:var(--term-bg); color:var(--term-ink); border:1px solid var(--line);
+    border-radius:10px; padding:14px 16px; overflow-x:auto;
+    font-family:"JetBrains Mono",Consolas,"D2Coding",monospace;
+    font-size:.86rem; line-height:1.6; margin:0;
+  }
+  pre.proto{background:var(--code-bg); color:var(--ink); font-weight:600}
+  .case{border-left:3px solid var(--line); padding-left:16px; margin:16px 0}
+  .case p{margin:0 0 8px}
+  .lists{margin:0; padding:0; list-style:none; font-family:Consolas,monospace; font-size:.9rem}
+  .lists li{padding:2px 0}
+  .lists b{color:var(--accent); font-weight:600}
+  .arrow{color:var(--muted); margin:6px 0; font-size:.85rem}
+  details.hint{
+    margin:22px 0 0; border:1px dashed var(--spoiler); border-radius:10px;
+    padding:10px 16px; background:transparent;
+  }
+  details.hint summary{
+    cursor:pointer; color:var(--spoiler); font-size:.85rem; font-weight:700;
+    letter-spacing:.02em;
+  }
+  details.hint summary::marker{color:var(--spoiler)}
+  details.hint .body{margin-top:12px; font-size:.9rem}
+  details.hint pre{font-size:.82rem}
+  footer{margin-top:56px; padding-top:20px; border-top:1px solid var(--line);
+    color:var(--muted); font-size:.85rem; text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="kicker">Section C</p>
+  <h1>스택과 큐 (Stack and Queues)</h1>
+  <p>이 섹션에서 지정된 문제 1개를 풀면 됩니다.</p>
+</header>
+
+<div class="notice">
+  <strong>안내</strong> — 각 문제의 프로그램 템플릿은 APAS 시스템에 올라와 있습니다.
+  반드시 그 템플릿을 사용해서 함수를 구현해야 합니다.
+</div>
+
+<div class="notice" style="border-left-color:var(--spoiler); background:transparent; border:1px dashed var(--spoiler); border-radius:10px">
+  <strong style="color:var(--spoiler)">원본 PDF 여백 메모에 대해</strong> — 원본에는 누군가 빨간 글씨로
+  적어둔 풀이 힌트가 문제마다 붙어 있습니다. 빠뜨리면 원본과 달라지니까 옮겨는 뒀는데,
+  <b>먼저 스스로 풀어보시라고 접어두었습니다.</b> 각 문제 아래 “여백 메모 보기”를 눌러야 펼쳐집니다.
+</div>
+
+<nav class="toc">
+  <h2>문제 목록</h2>
+  <ol>
+    <li><a href="#q1">createQueueFromLinkedList — 연결 리스트로 큐 만들기</a></li>
+    <li><a href="#q2">createStackFromLinkedList — 연결 리스트로 스택 만들기</a></li>
+    <li><a href="#q3">isStackPairwiseConsecutive — 두 개씩 연속인지 검사</a></li>
+    <li><a href="#q4">reverseQueue — 스택으로 큐 뒤집기</a></li>
+    <li><a href="#q5">recursiveReverseQueue — 재귀로 큐 뒤집기</a></li>
+    <li><a href="#q6">removeUntilStack — 지정한 값까지 빼내기</a></li>
+    <li><a href="#q7">balanced — 괄호 짝 맞추기</a></li>
+  </ol>
+</nav>
+
+<section class="q" id="q1">
+  <h2><span class="num">1</span><span class="fn">createQueueFromLinkedList</span></h2>
+
+  <p>연결 리스트에 저장된 정수를 전부 <b>enqueue</b> 해서 큐(연결 리스트 기반)를 만드는
+  C 함수 <code>createQueueFromLinkedList()</code>를 작성하세요.</p>
+
+  <p>연결 리스트의 첫 번째 노드가 먼저 들어가고, 그다음 두 번째 노드, 이런 순서입니다.
+  <b>시작할 때 큐가 비어 있지 않으면 먼저 비워야 한다</b>는 점을 잊지 마세요.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void createQueueFromLinkedList(LinkedList *ll, Queue *q);</pre>
+
+  <h3>입출력 예시</h3>
+  <p class="arrow">현재 연결 리스트가 <b>1, 2, 3, 4, 5</b> 일 때</p>
+<pre>만들어진 연결 리스트: 1 2 3 4 5
+원하는 번호를 입력하세요(1/2/3/0): 2
+만들어진 큐: 1 2 3 4 5</pre>
+
+  <details class="hint">
+    <summary>여백 메모 보기 (풀이 힌트 · 스포일러)</summary>
+    <div class="body">
+<pre>ListNode *temp = ll-&gt;head;
+while (temp != NULL) {
+    // 여기서 하고 싶은 걸 한다
+    temp = temp-&gt;next;
+}</pre>
+    </div>
+  </details>
+</section>
+
+<section class="q" id="q2">
+  <h2><span class="num">2</span><span class="fn">createStackFromLinkedList</span></h2>
+
+  <p>연결 리스트에 저장된 정수를 전부 <b>push</b> 해서 스택(연결 리스트 기반)을 만드는
+  C 함수 <code>createStackFromLinkedList()</code>를 작성하세요.</p>
+
+  <p>연결 리스트의 첫 번째 노드가 먼저 push 되고, 그다음 두 번째 노드, 이런 순서입니다.
+  <b>시작할 때 스택이 비어 있지 않으면 먼저 비워야 합니다.</b></p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void createStackFromLinkedList(LinkedList *ll, Stack *stack);</pre>
+
+  <h3>입출력 예시</h3>
+  <p class="arrow">현재 연결 리스트가 <b>1, 3, 5, 6, 7</b> 일 때</p>
+<pre>만들어진 연결 리스트: 1 3 5 6 7
+원하는 번호를 입력하세요(1/2/3/0): 2
+만들어진 스택: 7 6 5 3 1</pre>
+  <p class="arrow">→ 먼저 넣은 것이 바닥으로 내려가니까 출력 순서가 뒤집힙니다.</p>
+
+  <details class="hint">
+    <summary>여백 메모 보기 (풀이 힌트 · 스포일러)</summary>
+    <div class="body">
+<pre>ListNode *temp = ll-&gt;head;
+while (temp != NULL) {
+    // 여기서 하고 싶은 걸 한다
+    temp = temp-&gt;next;
+}</pre>
+    </div>
+  </details>
+</section>
+
+<section class="q" id="q3">
+  <h2><span class="num">3</span><span class="fn">isStackPairwiseConsecutive</span></h2>
+
+  <p>스택에 든 숫자들이 <b>두 개씩 짝지어 연속인지</b> 검사하는 C 함수
+  <code>isStackPairwiseConsecutive()</code>를 작성하세요.</p>
+
+  <p>이 함수는 스택에 정수를 넣거나 뺄 때 <b><code>push()</code>와 <code>pop()</code>만</b>
+  사용해야 합니다.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">int isStackPairwiseConsecutive(Stack *s);</pre>
+
+  <h3>예시</h3>
+  <div class="case">
+    <ul class="lists"><li>스택: <b>16 15 11 10 5 4</b></li></ul>
+    <p class="arrow">→ 두 개씩 연속입니다. (16·15 / 11·10 / 5·4)</p>
+  </div>
+  <div class="case">
+    <ul class="lists"><li>스택: <b>16 15 11 10 5 1</b></li></ul>
+    <p class="arrow">→ 두 개씩 연속이 아닙니다. (5·1 이 안 맞음)</p>
+  </div>
+  <div class="case">
+    <ul class="lists"><li>스택: <b>16 15 11 10 5</b></li></ul>
+    <p class="arrow">→ 두 개씩 연속이 아닙니다. (개수가 홀수라 짝이 안 맞음)</p>
+  </div>
+
+  <details class="hint">
+    <summary>여백 메모 보기 (풀이 힌트 · 스포일러)</summary>
+    <div class="body">
+      <p>크기가 홀수면 0 을 반환.<br>
+      아니면 쌍마다 확인해서, 하나라도 조건에 안 맞으면 0 을 반환.<br>
+      전부 통과하면 1 을 반환.</p>
+    </div>
+  </details>
+</section>
+
+<section class="q" id="q4">
+  <h2><span class="num">4</span><span class="fn">reverseQueue</span></h2>
+
+  <p><b>스택을 사용해서</b> 큐를 뒤집는 C 함수 <code>reverseQueue()</code>를 작성하세요.</p>
+
+  <p>스택에 정수를 넣고 뺄 때는 <code>push()</code>와 <code>pop()</code>만,
+  큐에 정수를 넣고 뺄 때는 <code>enqueue()</code>와 <code>dequeue()</code>만 사용해야 합니다.
+  <b>시작할 때 스택이 비어 있지 않으면 먼저 비워야 합니다.</b></p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void reverseQueue(Queue *q);</pre>
+
+  <h3>예시</h3>
+  <p class="arrow">큐가 <b>(1, 2, 3, 4, 5)</b> 이면 결과 큐는 <b>(5, 4, 3, 2, 1)</b> 입니다.</p>
+
+  <details class="hint">
+    <summary>여백 메모 보기 (풀이 힌트 · 스포일러)</summary>
+    <div class="body">
+      <p>스택 초기화하는 것을 잊지 말 것.</p>
+    </div>
+  </details>
+</section>
+
+<section class="q" id="q5">
+  <h2><span class="num">5</span><span class="fn">recursiveReverseQueue</span></h2>
+
+  <p>정수 큐에 저장된 항목의 순서를 뒤집는 <b>재귀</b> C 함수
+  <code>recursiveReverseQueue()</code>를 작성하세요.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void recursiveReverseQueue(Queue *q);</pre>
+
+  <h3>예시</h3>
+  <p class="arrow">큐가 <b>(1, 2, 3, 4, 5)</b> 이면 결과 큐는 <b>(5, 4, 3, 2, 1)</b> 입니다.</p>
+
+  <details class="hint">
+    <summary>여백 메모 보기 (풀이 힌트 · 스포일러)</summary>
+    <div class="body">
+<pre>int temp;
+if (q-&gt;ll.head == NULL) return;
+temp = dequeue(q);
+recursiveReverseQueue(q);
+enqueue(q, temp);</pre>
+      <p style="color:var(--muted)">※ 원본 여백에 적힌 코드가 사실상 정답입니다.</p>
+    </div>
+  </details>
+</section>
+
+<section class="q" id="q6">
+  <h2><span class="num">6</span><span class="fn">removeUntilStack</span></h2>
+
+  <p>정수 스택에서 <b>지정한 값이 처음 나올 때까지</b> 값을 전부 pop 해내는 C 함수
+  <code>removeUntilStack()</code>을 작성하세요.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">void removeUntilStack(Stack *s, int value);</pre>
+
+  <h3>예시</h3>
+  <div class="case">
+    <ul class="lists">
+      <li>스택: <b>(1, 2, 3, 4, 5, 6, 7)</b> — 맨 왼쪽이 top</li>
+      <li><code>removeUntilStack()</code>을 <code>value = 4</code> 로 호출</li>
+      <li>결과 스택: <b>(4, 5, 6, 7)</b></li>
+    </ul>
+  </div>
+  <div class="case">
+    <ul class="lists">
+      <li>스택: <b>(10, 20, 15, 25, 5)</b> — 맨 왼쪽이 top</li>
+      <li><code>removeUntilStack()</code>을 <code>value = 15</code> 로 호출</li>
+      <li>결과 스택: <b>(15, 25, 5)</b></li>
+    </ul>
+  </div>
+  <p class="arrow">→ 지정한 값 자체는 <b>남습니다.</b> 그 값이 새 top 이 됩니다.</p>
+
+  <details class="hint">
+    <summary>여백 메모 보기 (풀이 힌트 · 스포일러)</summary>
+    <div class="body">
+      <p><code>for</code> 문도 <code>while</code> 처럼 <code>break</code> 로 빠져나올 수 있다.<br>
+      <code>s-&gt;ll.size == 0</code> 인 경우를 고려할 것.</p>
+    </div>
+  </details>
+</section>
+
+<section class="q" id="q7">
+  <h2><span class="num">7</span><span class="fn">balanced</span></h2>
+
+  <p><code>()[]{}</code> 문자로 이루어진 식의 <b>괄호 짝이 맞는지</b> 판정하는 C 함수
+  <code>balanced()</code>를 작성하세요.</p>
+
+  <h3>함수 원형</h3>
+  <pre class="proto">int balanced(char *expression);</pre>
+
+  <h3>예시</h3>
+  <div class="case">
+    <p>괄호의 <b>순서와 개수가 모두 맞아서</b> 짝이 맞는 식:</p>
+    <ul class="lists">
+      <li><b>()</b></li>
+      <li><b>([])</b></li>
+      <li><b>{[]()[]}</b></li>
+    </ul>
+  </div>
+  <div class="case">
+    <p>짝이 맞지 않는 식:</p>
+    <ul class="lists">
+      <li><b>{{)]</b></li>
+      <li><b>[({{)])</b></li>
+    </ul>
+  </div>
+
+  <h3>입출력 예시</h3>
+<pre>1: 문자열 입력:
+2: ()[]{} 로 이루어진 식의 괄호가 맞는지 확인:
+0: 종료:
+
+원하는 번호를 입력하세요(1/0): 1
+괄호가 맞는지 확인할 식을 공백 없이 입력하세요: {[]()[]}
+{[]()[]}
+괄호가 맞습니다!
+
+원하는 번호를 입력하세요(1/0): 0</pre>
+
+<pre>원하는 번호를 입력하세요(1/0): 1
+괄호가 맞는지 확인할 식을 공백 없이 입력하세요: [({{)])
+[({{)])
+괄호가 안 맞습니다!
+
+원하는 번호를 입력하세요(1/0): 0</pre>
+
+  <details class="hint">
+    <summary>여백 메모 보기 (풀이 힌트 · 스포일러)</summary>
+    <div class="body">
+      <p>스택을 쓴다.<br>
+      <code>{</code> <code>[</code> <code>(</code> 이면 스택에 push.<br>
+      아니면 <code>}</code> <code>]</code> <code>)</code> 가 스택 top 과 짝이 맞을 때 pop.<br>
+      마지막에 스택이 비었는지 확인.</p>
+    </div>
+  </details>
+</section>
+
+<footer>
+  원본: <i>Stack and Queues Questions.pdf</i> (CE1007/CZ1007 Data Structures, Section C) 를 한글로 옮긴 문서입니다.<br>
+  원본 대조가 필요하면 같은 폴더의 PDF 를 보세요.
+</footer>
+
+</div>
+</body>
+</html>
