@@ -1,0 +1,5 @@
+# core.autocrlf=true 라서 체크아웃할 때 줄끝이 CRLF 로 바뀐다.
+# 셸 스크립트는 WSL 의 bash 가 읽는데, 줄 끝에 캐리지 리턴이 붙으면
+# 그걸 명령 이름의 일부로 읽어서 "command not found" 로 깨진다.
+# 그래서 .sh 는 LF 로 고정한다.
+*.sh text eol=lf
