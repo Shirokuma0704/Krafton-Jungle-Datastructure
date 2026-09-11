@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 
-/* CE1007/CZ1007 Data Structures
-Lab Test: Section F - Binary Search Trees Questions
-Purpose: Implementing the required functions for Question 5
+/* CE1007/CZ1007 자료구조
+실습 시험: F 섹션 - 이진 탐색 트리 문제
+목적: 5번 문제에 필요한 함수 구현하기
 		 Implementing 'remove node' operation for BST*/
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -15,21 +15,21 @@ typedef struct _bstnode{
 	int item;
 	struct _bstnode *left;
 	struct _bstnode *right;
-} BSTNode;   // You should not change the definition of BSTNode
+} BSTNode;   // BSTNode 의 정의는 바꾸지 마세요
 
 typedef struct _stackNode{
 	BSTNode *data;
 	struct _stackNode *next;
-}StackNode; // You should not change the definition of StackNode
+}StackNode; // StackNode 의 정의는 바꾸지 마세요
 
 typedef struct _stack
 {
 	StackNode *top;
-}Stack; // You should not change the definition of Stack
+}Stack; // Stack 의 정의는 바꾸지 마세요
 
-///////////////////////// function prototypes ////////////////////////////////////
+///////////////////////// 함수 원형 선언 ////////////////////////////////////
 
-// You should not change the prototypes of these functions
+// 이 함수들의 원형(prototype)은 바꾸지 마세요
 void postOrderIterativeS2(BSTNode *root);
 
 void insertBSTNode(BSTNode **node, int value);
@@ -48,37 +48,37 @@ int main()
 	int c, i;
 	c = 1;
 
-	//Initialize the Binary Search Tree as an empty Binary Search Tree
+	//이진 탐색 트리를 빈 트리로 초기화한다
 	BSTNode * root;
 	root = NULL;
 
-	printf("1: Insert an integer into the binary search tree;\n");
-	printf("2: Print the post-order traversal of the binary search tree;\n");
-	printf("0: Quit;\n");
+	printf("1: 이진 탐색 트리에 정수 넣기;\n");
+	printf("2: 이진 탐색 트리 후위 순회 출력;\n");
+	printf("0: 종료;\n");
 
 
 	while (c != 0)
 	{
-		printf("Please input your choice(1/2/0): ");
+		printf("원하는 번호를 입력하세요(1/2/0): ");
 		scanf("%d", &c);
 
 		switch (c)
 		{
 		case 1:
-			printf("Input an integer that you want to insert into the Binary Search Tree: ");
+			printf("이진 탐색 트리에 넣을 정수를 입력하세요: ");
 			scanf("%d", &i);
 			insertBSTNode(&root, i);
 			break;
 		case 2:
-			printf("The resulting post-order traversal of the binary search tree is: ");
-			postOrderIterativeS2(root); // You need to code this function
+			printf("이진 탐색 트리 후위 순회 결과: ");
+			postOrderIterativeS2(root); // 이 함수를 직접 작성해야 합니다
 			printf("\n");
 			break;
 		case 0:
 			removeAll(&root);
 			break;
 		default:
-			printf("Choice unknown;\n");
+			printf("알 수 없는 선택입니다;\n");
 			break;
 		}
 
@@ -91,14 +91,14 @@ int main()
 
 void postOrderIterativeS2(BSTNode *root)
 {
-	 /* add your code here */
+	 /* 여기에 코드를 작성하세요 */
 }
 
-/* Given a binary search tree and a key, this function
-   deletes the key and returns the new root. Make recursive function. */
+/* 이진 탐색 트리와 키 값을 받아서 그 키를 삭제하고
+   새 루트를 돌려주는 함수다. 재귀로 작성하세요. */
 BSTNode* removeNodeFromTree(BSTNode *root, int value)
 {
-	/* add your code here */
+	/* 여기에 코드를 작성하세요 */
 }
 ///////////////////////////////////////////////////////////////////////////////
 
