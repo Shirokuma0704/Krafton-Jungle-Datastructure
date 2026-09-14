@@ -52,8 +52,8 @@ int removeNode(LinkedList *ll, int index);
 
 int main()
 {
-	char ch, str[256];
-	int c, i;
+	char  str[256];
+	int c;
 	c = 1;
 
 	LinkedList ll;
@@ -104,8 +104,107 @@ int main()
 ////////////////////////////////////////////////////////////
 int balanced(char *expression)
 {
-/* 여기에 코드를 작성하세요 */
+
+	Stack pair;
+
+	pair.ll.head = NULL;
+	pair.ll.size = 0;
+
+
+	int ascii = 0;
+
+	for (int idx = 0; expression[idx] != '\0'; idx++)
+	{
+		ascii = (int)expression[idx];
+		switch (ascii)
+		{
+		case 40:
+			push(&pair, 40);
+			break;
+		case 41:
+			if (pop(&pair) == 40)
+				break;
+			return 1;
+
+		case 91:
+			push(&pair, 91);
+			break;
+		case 93:
+			if (pop(&pair) == 91)
+				break;
+			return 1;
+
+		case 123:
+			push(&pair, 123);
+			break;
+		case 125:
+			if (pop(&pair) == 123)
+				break;
+			return 1;
+
+		default:
+			return 1;
+		}
+	}
+
+	if (pair.ll.size > 0)
+		return 1;
+
+	return 0;
 }
+
+
+/*	for (int idx = 0; expression[idx] != '\0'; idx++)
+	{
+		ascii = (int)expression[idx];
+		switch (ascii)
+		{
+		case 41:
+			if (round > 0)
+			{
+				round--;
+				break;
+			}
+			return 1;
+		case 40:
+			round++;
+			break;
+
+		case 91:
+			braces++;
+			break;
+		case 93:
+			if (braces > 0)
+			{
+				braces--;
+				break;
+			}
+			return 1;
+
+
+		case 123:
+			square++;
+			break;
+		case 125:
+			if (square > 0)
+			{
+				square--;
+				break;
+			}
+			return 1;
+
+		default:
+			return 1;
+		}
+	}
+
+	if (square + braces + round == 0)
+		return 0;
+
+	return 1;
+*/
+
+
 
 ////////////////////////////////////////////////////////////
 
