@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MIN_INT -1000
 //////////////////////////////////////////////////////////////////////////////////
@@ -113,12 +114,42 @@ int main()
 
 void createStackFromLinkedList(LinkedList *ll, Stack *s)
 {
-    /* 여기에 코드를 작성하세요 */
+	if (s != NULL)
+		removeAllItemsFromStack(s);
+	ListNode *cur;
+
+	cur = ll->head;
+
+	while (cur != NULL)
+	{
+		push(s, cur->item);
+		cur = cur->next;
+	}
 }
 
 void removeEvenValues(Stack *s)
 {
-	/* 여기에 코드를 작성하세요 */
+	int size = s->ll.size;
+
+	int item = 0;
+	int items[size];
+	memset(items, 0, sizeof(items));
+
+	for(int idx = 0; idx < size; idx++)
+	{
+		item = pop(s);
+		if (abs(item) % 2 != 0)
+			items[idx] = item;
+	}
+
+	for(int idx = size-1; idx >= 0; idx--)
+	{
+		item = items[idx];
+		if (item != 0)
+			push(s, item);
+	}
+
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////
