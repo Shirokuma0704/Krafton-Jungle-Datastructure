@@ -111,7 +111,29 @@ int main()
 
 void removeUntil(Stack *s, int value)
 {
-/* 여기에 코드를 작성하세요 */
+	Stack temp;
+	temp.ll.head = NULL;
+	temp.ll.size = 0;
+
+	int item = 0;
+	int reset = 0;
+
+	while (s->ll.size > 0)
+	{
+		item = pop(s);
+		if (item == value && reset == 0)
+		{
+			removeAllItemsFromStack(&temp);
+			reset = 1;
+		}
+		push(&temp, item);
+	}
+
+
+
+	while (temp.ll.size > 0)
+		push(s ,pop(&temp));
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////
