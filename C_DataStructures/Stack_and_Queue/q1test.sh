@@ -18,103 +18,19 @@
 #
 # 이 문제는 while 조건을 잘못 걸면 무한 루프에 빠지면서 malloc 이 계속 쌓입니다.
 # 그래서 케이스마다 시간 제한을 걸어두고, 넘기면 따로 표시합니다.
+#
+# gcc 찾기 / 컴파일 / 타임아웃 / 출력 비교 / valgrind / 집계는 전부
+# ../common/testlib.sh 로 빠졌어요. 여기 남은 건 "Q1 에서만 다른 것" 뿐입니다.
 
 set -u
 cd "$(dirname "$0")"
 
-VG=0
-[ "${1:-}" = "-v" ] && VG=1
-
-LIMIT=5          # 한 케이스에 허용할 초. 무한 루프를 여기서 끊습니다.
-
-# --- 어디서 돌리든 gcc 를 찾아냅니다 ------------------------------------
-# WSL 이나 PATH 에 gcc 가 있으면 그걸 쓰고, 없으면 CLion 번들 MinGW 를 찾습니다.
-find_gcc() {
-	if command -v gcc >/dev/null 2>&1; then echo gcc; return 0; fi
-	local c
-	for c in "/c/Program Files/JetBrains/CLion"*/bin/mingw/bin/gcc.exe \
-	         "$HOME/AppData/Local/Programs/CLion"*/bin/mingw/bin/gcc.exe \
-	         "/c/Program Files/JetBrains/Toolbox/apps/CLion"*/bin/mingw/bin/gcc.exe; do
-		[ -x "$c" ] && { echo "$c"; return 0; }
-	done
-	return 1
-}
-
-GCC=$(find_gcc) || {
-	echo "gcc 를 못 찾았습니다."
-	echo "  - WSL 에서 돌리시거나"
-	echo "  - CLion 이 설치된 경로가 위 목록과 다르면 find_gcc 에 경로를 한 줄 추가하세요."
-	exit 1
-}
-
-# Windows 에서는 실행 파일에 .exe 가 붙습니다.
-EXE=""
-case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) EXE=".exe";; esac
-
-WORK=$(mktemp -d) || exit 1
-trap 'rm -rf "$WORK"' EXIT
-BIN="$WORK/q1test$EXE"
-
-"$GCC" -g -Wall -Wextra -std=c11 \
-	-Wno-unused-but-set-variable -Wno-unused-parameter \
-	Q1_C_SQ.c -o "$BIN"
-[ -x "$BIN" ] || { echo "컴파일 실패"; exit 1; }
-
-if [ "$VG" = 1 ] && ! command -v valgrind >/dev/null 2>&1; then
-	echo "valgrind 가 없습니다. 기대값 대조만 합니다. (valgrind 는 WSL 쪽에 있습니다)"
-	VG=0
-fi
-
-EMPTY="비어 있음"
-pass=0; fail=0; vgbad=0; hang=0
-
-# 메뉴 입력 문자열을 만듭니다. 값들을 1 로 넣고, 뒤에 원하는 메뉴를 붙입니다.
-menu() {                 # menu "값들" "뒤에 붙일 메뉴들"
-	local vals="$1" tail="$2" inp="" x
-	for x in $vals; do inp+="1\n$x\n"; done
-	printf '%s' "$inp$tail"
-}
-
-# 출력에서 원하는 줄을 뽑습니다. 프롬프트가 같은 줄에 붙어 나오므로 잘라냅니다.
-pick() {                 # pick "출력전체" "찾을라벨" [몇번째]
-	echo "$2" | grep "$1" | sed -n "${3:-1}p" | sed 's/.*큐: //' | sed 's/[[:space:]]*$//'
-}
-
-run() {                  # run "메뉴입력"  ->  전역 OUT, RC 를 채웁니다
-	OUT=$(printf "$1" | timeout -k 1 "$LIMIT" "$BIN" 2>/dev/null)
-	RC=$?
-}
-
-# 시간 초과나 비정상 종료를 공통으로 처리합니다. 걸리면 1 을 돌려줍니다.
-died() {                 # died "케이스이름"
-	if [ "$RC" = 124 ]; then
-		hang=$((hang+1)); fail=$((fail+1))
-		printf '  멈춤  [%s]  %d초 안에 안 끝났습니다 (무한 루프 의심)\n' "$1" "$LIMIT"
-		return 0
-	elif [ "$RC" -ge 128 ]; then
-		fail=$((fail+1))
-		printf '  죽음  [%s]  신호 %d %s\n' "$1" "$((RC-128))" \
-			"$([ "$RC" = 139 ] && echo '(SIGSEGV - 잘못된 주소)'; \
-			   [ "$RC" = 134 ] && echo '(SIGABRT)')"
-		return 0
-	fi
-	return 1
-}
-
-judge() {                # judge "케이스이름" "항목" "나온것" "기대값"
-	if [ "$3" = "$4" ]; then
-		return 0
-	fi
-	fail=$((fail+1))
-	printf '  FAIL  [%s]  %s\n' "$1" "$2"
-	printf '          나온것: [%s]\n' "$3"
-	printf '          기대값: [%s]\n' "$4"
-	return 1
-}
+SRC=Q1_C_SQ.c
+. ../common/testlib.sh
 
 check() {                # check "리스트값들" "기대 큐" "홀수 뺀 기대 결과"
 	local vals="$1" wantq="$2" wanto="$3"
-	local inp gotq goto vgout
+	local inp gotq goto
 
 	inp=$(menu "$vals" "2\n3\n0\n")
 	run "$inp"
@@ -125,20 +41,10 @@ check() {                # check "리스트값들" "기대 큐" "홀수 뺀 기�
 
 	if judge "$vals" "큐 만들기" "$gotq" "$wantq" \
 	   && judge "$vals" "홀수 빼기" "$goto" "$wanto"; then
-		pass=$((pass+1)); printf '  OK    [%s]\n' "$vals"
+		ok "$vals"
 	fi
 
-	if [ "$VG" = 1 ]; then
-		vgout=$(printf "$inp" | valgrind -q --leak-check=full \
-			--errors-for-leak-kinds=definite "$BIN" 2>&1 >/dev/null)
-		vgout=$(echo "$vgout" | grep -E -A2 \
-			"Invalid read|Invalid write|Invalid free|Mismatched free|definitely lost|uninitialised")
-		if [ -n "$vgout" ]; then
-			vgbad=$((vgbad+1))
-			printf '          valgrind:\n'
-			echo "$vgout" | head -8 | sed 's/^/            /'
-		fi
-	fi
+	vgcheck "$inp" "$vals"
 }
 
 twice() {                # twice "리스트값들" "두 번째로 만든 큐의 기대값"
@@ -150,7 +56,7 @@ twice() {                # twice "리스트값들" "두 번째로 만든 큐의 
 
 	got=$(pick "만들어진 큐" "$OUT" 2)
 	if judge "2연속:$vals" "두 번째 큐" "$got" "$want"; then
-		pass=$((pass+1)); printf '  OK    [2연속:%s]\n' "$vals"
+		ok "2연속:$vals"
 	fi
 }
 
@@ -197,9 +103,4 @@ echo "=== 큐 만들기를 두 번 연속 ==="
 # 어떻게 되어야 맞는지를 정해서 적으세요. 정답이 하나가 아닙니다.
  twice "2 4 6" "2 4 6" #시작에 큐를 비워서 2 4 6만 들어감
 
-echo
-printf '  통과 %d / 실패 %d' "$pass" "$fail"
-[ "$hang" -gt 0 ] && printf ' (그중 멈춤 %d)' "$hang"
-[ "$VG" = 1 ] && printf ' / valgrind 문제 %d' "$vgbad"
-echo
-[ "$fail" -eq 0 ] && { [ "$VG" = 0 ] || [ "$vgbad" -eq 0 ]; }
+summary
