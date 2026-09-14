@@ -124,6 +124,7 @@ int balanced(char *expression)
 		case 41:
 			if (pop(&pair) == 40)
 				break;
+			removeAllItemsFromStack(&pair);
 			return 1;
 
 		case 91:
@@ -132,6 +133,7 @@ int balanced(char *expression)
 		case 93:
 			if (pop(&pair) == 91)
 				break;
+			removeAllItemsFromStack(&pair);
 			return 1;
 
 		case 123:
@@ -140,16 +142,21 @@ int balanced(char *expression)
 		case 125:
 			if (pop(&pair) == 123)
 				break;
+			removeAllItemsFromStack(&pair);
 			return 1;
 
 		default:
+			removeAllItemsFromStack(&pair);
 			return 1;
 		}
 	}
 
 	if (pair.ll.size > 0)
+	{
+		removeAllItemsFromStack(&pair);
 		return 1;
-
+	}
+	removeAllItemsFromStack(&pair);
 	return 0;
 }
 
