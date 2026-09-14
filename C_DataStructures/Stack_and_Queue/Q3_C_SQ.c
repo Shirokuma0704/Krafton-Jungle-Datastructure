@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <limits.h>
 
+
+
 //////////////////////////////////   연결 리스트 /////////////////////////////////
 
 typedef struct _listnode{
@@ -46,9 +48,10 @@ int removeNode(LinkedList *ll, int index);
 void removeAllItems(LinkedList *ll);
 
 //////////////////////////////////////////////////////////////////////////////////////
-
 int main()
 {
+	setvbuf(stdout, NULL, _IONBF, 0);
+
     int c, value;
 
     Stack s;
@@ -103,7 +106,20 @@ int main()
 
 int isStackPairwiseConsecutive(Stack *s)
 {
-  /* 여기에 코드를 작성하세요 */
+	if (s->ll.size == 0 || (s->ll.size) % 2 == 1)
+  		return 0;
+
+	while (s->ll.size != 0)
+	{
+		int char1 = pop(s);
+		int char2 = pop(s);
+
+		if (char1 + 1 != char2 && char1 != char2 + 1)
+			return 0;
+	}
+
+	return 1;
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////
