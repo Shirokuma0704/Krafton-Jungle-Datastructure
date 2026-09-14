@@ -20,6 +20,9 @@
 : "${SRC:?SRC 에 소스 파일 이름을 먼저 넣어주세요. 예) SRC=Q4_C_SQ.c}"
 : "${LIMIT:=5}"          # 한 케이스에 허용할 초. 무한 루프를 여기서 끊습니다.
 
+# valgrind 가 "문제"로 볼 줄의 패턴이에요. 필요하면 문제별 스크립트에서 바꾸세요.
+: "${VG_PATTERN:=Invalid read|Invalid write|Invalid free|Mismatched free|definitely lost|uninitialised}"
+
 EMPTY="비어 있음"        # 출력이 비어 있어야 할 때 기대값 자리에 쓰세요.
 
 VG=0
@@ -69,9 +72,9 @@ fi
 # --- 프로그램을 두드리는 도구들 -----------------------------------------
 
 # 메뉴 입력 문자열을 만듭니다. 값들을 1 로 하나씩 넣고, 뒤에 원하는 메뉴를 붙여요.
-menu() {                 # menu "값들" "뒤에 붙일 메뉴들"
-	local vals="$1" tail="$2" inp="" x
-	for x in $vals; do inp+="1\n$x\n"; done
+menu() {                 # menu "값들" "뒤에 붙일 메뉴들" [넣기 메뉴 번호, 기본 1]
+	local vals="$1" tail="$2" key="${3:-1}" inp="" x
+	for x in $vals; do inp+="$key\n$x\n"; done
 	printf '%s' "$inp$tail"
 }
 
@@ -124,13 +127,18 @@ ok() {                   # ok "케이스이름"
 }
 
 # 같은 입력을 valgrind 로 한 번 더 돌립니다. -v 를 줬을 때만 동작해요.
+# 같은 입력을 valgrind 로 한 번 더 돌립니다. -v 를 줬을 때만 동작해요.
+#
+# 어떤 줄을 "문제"로 볼지는 VG_PATTERN 으로 정합니다. 기본값에는
+# uninitialised 가 들어 있는데, 과제 템플릿 자체가 초기화 안 된 변수를
+# 쓰는 문제도 있어요. 그럴 땐 그 문제의 스크립트에서 VG_PATTERN 을
+# 다시 정해서 그 항목만 빼시면 됩니다.
 vgcheck() {              # vgcheck "메뉴입력" "케이스이름"
 	[ "$VG" = 1 ] || return 0
 	local vgout
 	vgout=$(printf "$1" | valgrind -q --leak-check=full \
 		--errors-for-leak-kinds=definite "$BIN" 2>&1 >/dev/null)
-	vgout=$(echo "$vgout" | grep -E -A2 \
-		"Invalid read|Invalid write|Invalid free|Mismatched free|definitely lost|uninitialised")
+	vgout=$(echo "$vgout" | grep -E -A2 "$VG_PATTERN")
 	if [ -n "$vgout" ]; then
 		vgbad=$((vgbad+1))
 		printf '          valgrind [%s]:\n' "$2"

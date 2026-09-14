@@ -27,3 +27,41 @@ foreach (SOURCE_FILE ${QUESTION_SOURCES})
     get_filename_component(TARGET_NAME ${SOURCE_FILE} NAME_WE)
     add_executable(${TARGET_NAME} ${SOURCE_FILE})
 endforeach ()
+
+
+# --- 검산기 .sh 를 CTest 로 등록합니다 -----------------------------------
+# 이렇게 해두면 CLion 이 실행 구성을 알아서 만들어줘요. 셸 스크립트 구성을
+# 손으로 만들면서 인터프리터 경로를 매번 고칠 필요가 없어집니다.
+# (CLion 오른쪽 위 "Reload CMake Project" 를 한 번 눌러주면 목록에 뜹니다)
+#
+# 터미널에서 한꺼번에 돌리고 싶으시면:
+#     ctest --test-dir cmake-build-debug --output-on-failure
+#
+# 스크립트가 하나라도 실패하면 종료 코드 1 로 끝나니까, CTest 가 빨간불을 켭니다.
+
+find_program(BASH_EXECUTABLE
+        NAMES bash bash.exe
+        HINTS "C:/Program Files/Git/bin"
+              "C:/Program Files/Git/usr/bin"
+              "$ENV{LOCALAPPDATA}/Programs/Git/bin"
+        DOC "검산기 .sh 를 돌릴 bash")
+
+if (BASH_EXECUTABLE)
+    enable_testing()
+
+    file(GLOB TEST_SCRIPTS CONFIGURE_DEPENDS
+            "${CMAKE_CURRENT_SOURCE_DIR}/C_DataStructures/*/q*test.sh")
+
+    foreach (SCRIPT ${TEST_SCRIPTS})
+        # C_DataStructures/Stack_and_Queue/q4test.sh  ->  Stack_and_Queue.q4test
+        get_filename_component(SCRIPT_NAME ${SCRIPT} NAME_WE)
+        get_filename_component(SCRIPT_DIR ${SCRIPT} DIRECTORY)
+        get_filename_component(SECTION ${SCRIPT_DIR} NAME)
+
+        add_test(NAME ${SECTION}.${SCRIPT_NAME}
+                COMMAND "${BASH_EXECUTABLE}" "${SCRIPT}")
+    endforeach ()
+else ()
+    message(STATUS "bash 를 못 찾아서 검산기를 CTest 에 안 걸었습니다. "
+                   "Git for Windows 경로가 위 HINTS 와 다르면 한 줄 추가해주세요.")
+endif ()
