@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
 //////////////////////////////////////////////////////////////////////////////////
 typedef struct _btnode{
 	int item;
@@ -97,7 +99,29 @@ int main()
 int maxHeight(BTNode *node)
 
 {
-    /* 여기에 코드를 작성하세요 */
+    int right = 0, left =0;
+
+    if (node == NULL)
+        return -1;
+
+    if (node->right == NULL)
+        right = 0;
+    else
+    {
+        right = maxHeight(node->right);
+        right++;
+    }
+
+    if (node->left == NULL)
+        left = 0;
+    else
+    {
+        left = maxHeight(node->left);
+        left++;
+    }
+
+    return MAX(right, left);
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
