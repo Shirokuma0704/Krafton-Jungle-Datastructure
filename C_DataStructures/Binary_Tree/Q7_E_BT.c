@@ -45,6 +45,8 @@ BTNode* pop(Stack *stack);
 
 void printTree(BTNode *node);
 void removeAll(BTNode **node);
+int get_array_min(int arr[], int size);
+
 
 ///////////////////////////// main() /////////////////////////////////////////////
 
@@ -102,7 +104,25 @@ int main()
 
 int smallestValue(BTNode *node)
 {
-	/* 여기에 코드를 작성하세요 */
+    if (node == NULL)
+        return 0;
+
+    int val[3] = {node->item, 2147483647, 2147483647};
+
+
+    if (node->right == NULL || node->left == NULL)
+    {
+        if (node->right == NULL && node->left == NULL)
+            return val[0];
+    }
+
+    if (node->left != NULL)
+        val[1] = smallestValue(node->left);
+
+    if (node->right != NULL)
+        val[2] = smallestValue(node->right);
+
+    return get_array_min(val, 3);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -229,4 +249,14 @@ void removeAll(BTNode **node)
         free(*node);
         *node = NULL;
     }
+}
+
+int get_array_min(int arr[], int size) {
+    int min = arr[0]; // 첫 번째 값을 최솟값으로 초기화
+    for (int i = 1; i < size; i++) {
+        if (arr[i] < min) {
+            min = arr[i]; // 더 작은 값 발견 시 갱신
+        }
+    }
+    return min;
 }
