@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -102,9 +103,26 @@ int main()
 
 int hasGreatGrandchild(BTNode *node)
 {
-	/* 여기에 코드를 작성하세요 */
-}
+    if (node == NULL)
+        return 0;
 
+    int right = 0, left = 0;
+    int count = 0;
+
+    if (node->left != NULL)
+        left = hasGreatGrandchild(node->left);
+
+    if (node->right != NULL)
+        right = hasGreatGrandchild(node->right);
+
+    count = MAX(right, left);
+
+    if (count >= 3)
+        printf("%d ", node->item);
+
+    return count + 1;
+
+}
 //////////////////////////////////////////////////////////////////////////////////
 
 BTNode *createBTNode(int item)
