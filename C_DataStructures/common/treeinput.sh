@@ -29,6 +29,60 @@
 # **뒤쪽의 빈 자리는 안 적어도 됩니다.** 잎 노드의 자식들은 알아서 채워져요.
 # 이게 손으로 적을 때 제일 크게 줄어드는 부분입니다.
 
+# 레벨 순서로 적은 트리를 중위 순회한 결과로 바꿔줍니다.
+# printTree() 가 중위 순회라, 프로그램이 찍어낼 줄과 바로 맞대볼 수 있어요.
+#
+#     lv_to_inorder "4 2 6 1 3 5 7"   ->   1 2 3 4 5 6 7
+#
+# 덕분에 검산기에서 기대값도 트리로 적을 수 있습니다. 입력 칸과 기대값 칸이
+# 같은 언어가 되니까, 한쪽은 트리고 한쪽은 출력 문자열이라 헷갈릴 일이 없어요.
+lv_to_inorder() {        # lv_to_inorder "4 2 6 1 3 5 7"
+	local -a LO=($1)
+	local n=${#LO[@]}
+
+	[ "$n" -eq 0 ] && return
+	case "${LO[0]}" in ''|*[!0-9-]*) return;; esac
+
+	local -a val left right
+	val[0]=${LO[0]}; left[0]=-1; right[0]=-1
+
+	local cnt=1 i=1 q=0 t
+	while [ "$q" -lt "$cnt" ] && [ "$i" -lt "$n" ]; do
+		if [ "$i" -lt "$n" ]; then
+			t=${LO[$i]}; i=$((i+1))
+			case "$t" in ''|*[!0-9-]*) ;; *)
+				val[$cnt]=$t; left[$cnt]=-1; right[$cnt]=-1
+				left[$q]=$cnt; cnt=$((cnt+1));;
+			esac
+		fi
+		if [ "$i" -lt "$n" ]; then
+			t=${LO[$i]}; i=$((i+1))
+			case "$t" in ''|*[!0-9-]*) ;; *)
+				val[$cnt]=$t; left[$cnt]=-1; right[$cnt]=-1
+				right[$q]=$cnt; cnt=$((cnt+1));;
+			esac
+		fi
+		q=$((q+1))
+	done
+
+	# 왼쪽 끝까지 내려갔다가, 꺼내서 찍고, 오른쪽으로 한 발. 그걸 반복해요.
+	local -a stk
+	local top=-1 node=0 out="" first=1
+	while [ "$top" -ge 0 ] || [ "$node" -ge 0 ]; do
+		while [ "$node" -ge 0 ]; do
+			top=$((top+1)); stk[$top]=$node
+			node=${left[$node]}
+		done
+		node=${stk[$top]}; top=$((top-1))
+		if [ "$first" = 1 ]; then out="${val[$node]}"; first=0
+		else out="$out ${val[$node]}"; fi
+		node=${right[$node]}
+	done
+
+	printf '%s' "$out"
+}
+
+
 # 레벨 순서로 적은 트리를 createTree 가 묻는 순서로 바꿔줍니다.
 lv_to_preorder() {       # lv_to_preorder "4 2 6 1 3 5 7"
 	local -a LO=($1)
