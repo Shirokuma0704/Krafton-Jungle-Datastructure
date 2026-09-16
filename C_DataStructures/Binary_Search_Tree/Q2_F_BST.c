@@ -88,45 +88,54 @@ int main()
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void recuirsion_inOrder(BSTNode *Node, Stack *stack);
 
 void inOrderTraversal(BSTNode *root)
 {
-	Stack nodes;
+	Stack nodes, visited_root;
 	nodes.top = NULL;
+	visited_root.top = NULL;
 
 
 	if (root == NULL)
 		return;
 
-	recuirsion_inOrder(root, &nodes);
-
-	while (nodes.top != NULL)
-	{
-		printf("%d ", pop(&nodes)->item);
-	}
-
-}
-
-void recuirsion_inOrder(BSTNode *Node, Stack *stack)
-{
+	push(&nodes, root);
 
 	BSTNode *cur;
 
-	if (Node == NULL)
-		return;
 
-	cur = Node;
+	while (nodes.top != NULL)
+	{
+		cur = pop(&nodes);
 
+		if (cur->left != NULL || cur->right != NULL) //Root 판정
+		{
+			if (peek(&visited_root) != cur || peek(&visited_root) == NULL)
+				push(&visited_root,cur);
+			else
+			{
+				pop(&visited_root);
+				printf("%d ", cur->item);
+				continue;
+			}
+		}
 
-	recuirsion_inOrder(cur->right, stack);
+		if (cur->left == NULL && cur->right == NULL)  //끝점 판별
+		{
+			printf("%d ", cur->item);
+			continue;
+		}
 
-	push(stack, cur);
+		if (cur->right != NULL)
+			push(&nodes, cur->right);
 
-	recuirsion_inOrder(cur->left, stack);
+		push(&nodes, cur);
 
+		if (cur->left != NULL)
+			push(&nodes, cur->left);
+
+	}
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
