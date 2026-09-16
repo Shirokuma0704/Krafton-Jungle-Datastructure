@@ -92,7 +92,52 @@ int main()
 void postOrderIterativeS2(BSTNode *root)
 {
 	 /* 여기에 코드를 작성하세요 */
+	Stack nodes, visited_root;
+	nodes.top = NULL;
+	visited_root.top = NULL;
+
+
+	if (root == NULL)
+		return;
+
+	push(&nodes, root);
+
+	BSTNode *cur;
+
+
+	while (nodes.top != NULL)
+	{
+		cur = peek(&nodes);
+
+		if (cur->left != NULL || cur->right != NULL) //Root 판정
+		{
+			if (peek(&visited_root) != cur || peek(&visited_root) == NULL)
+				push(&visited_root,cur);
+			else
+			{
+				pop(&visited_root);
+				pop(&nodes);
+				printf("%d ", cur->item);
+				continue;
+			}
+		}
+
+		if (cur->left == NULL && cur->right == NULL)  //끝점 판별
+		{
+			pop(&nodes);
+			printf("%d ", cur->item);
+			continue;
+		}
+
+		if (cur->right != NULL)
+			push(&nodes, cur->right);
+
+		if (cur->left != NULL)
+			push(&nodes, cur->left);
+	}
 }
+
+
 
 /* 이진 탐색 트리와 키 값을 받아서 그 키를 삭제하고
    새 루트를 돌려주는 함수다. 재귀로 작성하세요. */
