@@ -54,12 +54,13 @@ int main()
 
 	printf("1: 이진 탐색 트리에 정수 넣기;\n");
 	printf("2: 이진 탐색 트리 후위 순회 출력;\n");
+	printf("3: 이진 탐색 트리에서 정수 삭제 (검산용);\n");
 	printf("0: 종료;\n");
 
 
 	while (c != 0)
 	{
-		printf("원하는 번호를 입력하세요(1/2/0): ");
+		printf("원하는 번호를 입력하세요(1/2/3/0): ");
 		scanf("%d", &c);
 
 		switch (c)
@@ -73,6 +74,12 @@ int main()
 			printf("이진 탐색 트리 후위 순회 결과: ");
 			postOrderIterativeS2(root); // 이 함수를 직접 작성해야 합니다
 			printf("\n");
+			break;
+		case 3:   /* 검산용으로 붙인 메뉴예요. 원본 템플릿에는 없습니다.
+		             APAS 에는 함수 몸통만 내니까 여기는 건드려도 괜찮아요 */
+			printf("삭제할 정수를 입력하세요: ");
+			scanf("%d", &i);
+			root = removeNodeFromTree(root, i);
 			break;
 		case 0:
 			removeAll(&root);
